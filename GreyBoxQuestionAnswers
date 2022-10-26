@@ -1,6 +1,9 @@
 Graph Theory Question:
 Q1: With this setup, you can add at most 25 additional edges (why?).
-A:
+A: Each time we add an edge on the circular graph, the number of nodes with degree = 2 decrease by 2 i.e. The current
+node and the node with which we're making an edge.
+Thus, our set of nodes with degree 2 will remove those corresponding positions. If each time, we're removing 2 positions
+from the set, then the maximum number of edges that can be created will be: MAX_NO_OF_NODES / 2
 
 Q2:  Are you always able to add this many?
 A:
