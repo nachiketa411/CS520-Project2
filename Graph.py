@@ -23,21 +23,28 @@ class Graph:
         print('degree 2: ', set_of_nodes_with_degree_2)
         while len(set_of_nodes_with_degree_2) > 0:
             random_node_choice = random.choice(list(set_of_nodes_with_degree_2))
-            list_of_possible_connections = [random_node_choice - 2 % no_of_nodes, random_node_choice - 3 % no_of_nodes,
-                                            random_node_choice - 4 % no_of_nodes, random_node_choice - 5 % no_of_nodes,
-                                            random_node_choice + 2 % no_of_nodes, random_node_choice + 3 % no_of_nodes,
-                                            random_node_choice + 4 % no_of_nodes, random_node_choice + 5 % no_of_nodes]
+            list_of_possible_connections = []
+            for i in range(2, 5):
+                list_of_possible_connections.append(random_node_choice - i % no_of_nodes)
+                list_of_possible_connections.append(random_node_choice + i % no_of_nodes)
 
             print('list_of_possible_connections: ', list_of_possible_connections)
             # filter out invalid points i.e. points which are not in the set anymore
             filtered_list = list(filter(lambda a: a in set_of_nodes_with_degree_2, list_of_possible_connections))
+
+            # print statements
             print('filtered_list: ', filtered_list)
+
             if len(filtered_list) == 0:
+                # print statements
                 print(self.graph)
+
                 return self.graph
             random_node_connection_choice = random.choice(filtered_list)
             self.graph[random_node_choice].append(random_node_connection_choice)
             self.graph[random_node_connection_choice].append(random_node_choice)
             set_of_nodes_with_degree_2.remove(random_node_choice)
             set_of_nodes_with_degree_2.remove(random_node_connection_choice)
+
+            # print statements
             print('Updated degree 2: ', set_of_nodes_with_degree_2)
