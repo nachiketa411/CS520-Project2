@@ -24,7 +24,7 @@ class BidirectionalSearch:
             # BFS in forward direction
             current = self.src_queue.pop(0)
             connected_node = self.graph[current]
-            print(connected_node)
+            #print(connected_node)
             while connected_node:
                 vertex = connected_node.pop(0)
                 #print(vertex)
@@ -32,17 +32,12 @@ class BidirectionalSearch:
                     self.src_queue.append(vertex)
                     self.src_visited[vertex] = True
                     self.src_parent[vertex] = current
-
-
-                    for i in self.graph[vertex]:
-                        connected_node.append(i)
-                    #print(connected_node)
         else:
 
             # BFS in backward direction
             current = self.dest_queue.pop(0)
             connected_node = self.graph[current]
-            print(connected_node)
+            #print(connected_node)
             while connected_node:
                 vertex = connected_node.pop(0)
                 #print(vertex)
@@ -50,10 +45,6 @@ class BidirectionalSearch:
                     self.dest_queue.append(vertex)
                     self.dest_visited[vertex] = True
                     self.dest_parent[vertex] = current
-
-                    for i in self.graph[vertex]:
-                        connected_node.append(i)
-                    #print(connected_node)
 
     # Check for intersecting vertex
     def is_intersecting(self):
@@ -91,6 +82,7 @@ class BidirectionalSearch:
         path = list(map(str, path))
 
         print(' '.join(path))
+        return path
 
     # Function for bidirectional searching
     def bidirectional_search(self, src, dest):
@@ -120,6 +112,6 @@ class BidirectionalSearch:
             if intersecting_node != -1:
                 print(f"Path exists between {src} and {dest}")
                 print(f"Intersection at : {intersecting_node}")
-                self.print_path(intersecting_node, src, dest)
-                exit(0)
+                path=self.print_path(intersecting_node, src, dest)
+                return path
         return -1
