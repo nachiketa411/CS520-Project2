@@ -1,4 +1,6 @@
 import random
+from queue import Queue
+
 import networkx as nx
 
 from Constants import NO_OF_NODES
@@ -7,7 +9,9 @@ from Constants import NO_OF_NODES
 class Graph:
     def __init__(self):
         self.graph = {}
+        self.distance_from_each_node = {}
         self.generate_graph(NO_OF_NODES)
+        self.calculate_distance_from_each_node()
 
     def generate_graph(self, no_of_nodes):
         for i in range(no_of_nodes):
@@ -62,3 +66,25 @@ class Graph:
         print('Final Graph: ', self.graph)
 
         return self.graph
+
+    def calculate_distance_from_each_node(self):
+        for i in (self.graph.keys()):
+            self.distance_from_each_node[i] = self.calculate_distance(i)
+
+    def calculate_distance(self, source):
+        Q = Queue()
+        distance = {k: 9999999 for k in self.graph.keys()}
+        visited_vertices = set()
+        Q.put(source)
+        while not Q.empty():
+            vertex = Q.get()
+            if vertex == source:
+                distance[vertex] = 0
+            for u in self.graph[vertex]:
+                if u not in visited_vertices:
+                    # update the distance
+                    if distance[u] > distance[vertex] + 1:
+                        distance[u] = distance[vertex] + 1
+                    Q.put(u)
+                    visited_vertices.update({u})
+        return distance
