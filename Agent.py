@@ -1,4 +1,6 @@
 import random
+import copy
+
 from abc import ABC, abstractmethod
 
 from Prey import Prey
@@ -16,7 +18,7 @@ class Agent(ABC):
 
     def initialize(self, predator):
         self.predator = predator
-        node_list = list(self.graph.keys())
+        node_list = copy.deepcopy(list(self.graph.keys()))
         node_list.remove(self.predator.currPos)
         if self.predator.currPos != self.prey.currPos:
             node_list.remove(self.prey.currPos)
@@ -29,5 +31,5 @@ class Agent(ABC):
         pass
 
     @abstractmethod
-    def take_next_move(self):
+    def get_next_move(self):
         pass

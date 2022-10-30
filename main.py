@@ -15,6 +15,7 @@ if __name__ == '__main__':
     prey = Prey(graph_1)
     predator = Predator(graph_1)
     print('Prey position: ', prey.currPos)
+    print("Test",graph_1.graph)
     agent1 = Agent1(prey, graph_1.graph)
     agent1.initialize(predator)
 
@@ -25,11 +26,7 @@ if __name__ == '__main__':
     print('Predator Object agent location: ', agent1.predator.currPos)
 
     prey.take_next_move(graph_1)
-    print('Updated Prey location: ', agent1.prey.currPos)
-
     predator.take_next_move()
-
     agent1.move_agent()
-    agent1.take_next_move()
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

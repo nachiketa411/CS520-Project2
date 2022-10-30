@@ -46,6 +46,7 @@ class BidirectionalSearch:
                     self.dest_visited[vertex] = True
                     self.dest_parent[vertex] = current
 
+
     # Check for intersecting vertex
     def is_intersecting(self):
 
@@ -60,9 +61,7 @@ class BidirectionalSearch:
 
     # Print the path from source to target
     def print_path(self, intersecting_node, src, dest):
-
-        # Print final path from
-        # source to destination
+        # Print final path from source to destination
         path = list()
         path.append(intersecting_node)
         i = intersecting_node
@@ -73,20 +72,13 @@ class BidirectionalSearch:
 
         path = path[::-1]
         i = intersecting_node
-
         while i != dest:
             path.append(self.dest_parent[i])
             i = self.dest_parent[i]
-
-        print("*****Path*****")
-        path = list(map(str, path))
-
-        print(' '.join(path))
         return path
 
     # Function for bidirectional searching
     def bidirectional_search(self, src, dest):
-
         # Add source to queue and mark visited as True and add its parent as -1
         self.src_queue.append(src)
         self.src_visited[src] = True
@@ -101,17 +93,24 @@ class BidirectionalSearch:
 
             # BFS in forward direction from Source Vertex
             self.bfs(direction = 'forward')
-
+            #print("A")
             # BFS in reverse direction from Destination Vertex
             self.bfs(direction = 'backward')
+            #print(self.dest_parent)
 
             # Check for intersecting vertex
             intersecting_node = self.is_intersecting()
 
             # If intersecting vertex exists then path from source to destination exists
             if intersecting_node != -1:
-                print(f"Path exists between {src} and {dest}")
-                print(f"Intersection at : {intersecting_node}")
+                #print(f"Path exists between {src} and {dest}")
+                #print(f"Intersection at : {intersecting_node}")
                 path=self.print_path(intersecting_node, src, dest)
+                self.src_queue.clear()
+                self.src_visited.clear()
+                self.src_parent.clear()
+                self.dest_queue.clear()
+                self.dest_visited.clear()
+                self.dest_parent.clear()
                 return path
         return -1

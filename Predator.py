@@ -1,5 +1,5 @@
 import random
-
+import copy
 from Agent import Agent
 from BiBFS import BidirectionalSearch
 
@@ -17,7 +17,7 @@ class Predator:
         self.agent = agent
 
     def take_next_move(self):
-        graph_traverse = BidirectionalSearch(self.graph)
+        graph_traverse = BidirectionalSearch(copy.deepcopy(self.graph))
         print('Predator Pos: ', self.currPos)
         print('Agent Pos: ', self.agent.currPos)
 
