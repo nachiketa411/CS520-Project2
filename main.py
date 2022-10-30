@@ -9,29 +9,41 @@ from Prey import Prey
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    graph_1 = Graph()
-    visualize(graph_1)
 
-    print("*********************************")
+    success_of_Agent=0
 
-    successRate=0
-    for i in range(10):
-        prey = Prey(graph_1)
-        predator = Predator(graph_1)
-        print('Prey position: ', prey.currPos)
-        print('Predator position: ', predator.currPos)
-        agent1 = Agent1(prey, graph_1.graph)
-        agent1.initialize(predator)
+    for k in range(100):
 
-        # change this with each agent
-        predator.initialize(agent1)
-        print('Agent location: ', agent1.currPos)
-        steps_taken = agent1.move_agent()
-        if steps_taken[1]==1:
-            successRate+=1
-        print("No of steps: ",steps_taken[0])
-        print("------------------------------------")
+        graph_1 = Graph()
+        #visualize(graph_1)
+        print("*********************************")
 
-    print("Success Rate is: ",successRate)
+        successRate = 0
+        for i in range(30):
+
+            prey = Prey(graph_1)
+            predator = Predator(graph_1)
+            print('Prey position: ', prey.currPos)
+            print('Predator position: ', predator.currPos)
+            agent1 = Agent1(prey, graph_1.graph)
+            agent1.initialize(predator)
+
+            # change this with each agent
+            predator.initialize(agent1)
+            print('Agent location: ', agent1.currPos)
+            steps_taken = agent1.move_agent()
+            if steps_taken[1] == 1:
+                successRate += 1
+            print("No of steps: ", steps_taken[0])
+            del prey
+            del predator
+            del agent1
+            print("------------------------------------")
+
+        del graph_1
+        print("Success Rate for #",k," is: ", successRate)
+        success_of_Agent+=successRate
+
+    print("Final Success Rate: ",success_of_Agent)
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

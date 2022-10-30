@@ -16,8 +16,8 @@ class Agent1(Agent):
         while count <= NO_OF_STEPS_1:
             next_move = self.get_next_move()
             if next_move == -1:
-                print("Even prayers can't save me.")
-                return [count, -2]
+                count+=1
+                continue
             self.currPos = next_move
             self.path.append(next_move)
             # print("Inside Agent",self.graph)
@@ -32,11 +32,9 @@ class Agent1(Agent):
             if self.currPos == self.prey.currPos:
                 print("Yippiieeee")
                 return [count, 1]
-                break
             elif self.currPos == self.predator.currPos:
                 print("Ded")
                 return [count, -1]
-                break
             count += 1
         return [count, 0]
 
