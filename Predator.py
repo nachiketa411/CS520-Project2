@@ -17,12 +17,17 @@ class Predator:
         self.agent = agent
 
     def take_next_move(self):
-        graph_traverse = BidirectionalSearch(copy.deepcopy(self.graph))
-        print('Predator Pos: ', self.currPos)
-        print('Agent Pos: ', self.agent.currPos)
+        g = copy.deepcopy(self.graph)
+        graph_traverse = BidirectionalSearch(g)
+        # print('Predator Pos: ', self.currPos)
+        # print('Agent Pos: ', self.agent.currPos)
 
         # need to update the method to return the complete instead of just the intersection point
-        next_move = graph_traverse.bidirectional_search(self.currPos, self.agent.currPos)
-        print('Predator Next Move Path: ', next_move)
-        self.currPos = next_move[1]
+        x = self.currPos
+        y = self.agent.currPos
+        # print(y,type(y))
+        next_move = graph_traverse.bidirectional_search(x, y)
+        # print('Predator Next Move Path: ', next_move)
+        if len(next_move) > 1:
+            self.currPos = next_move[1]
         self.path.append(self.currPos)

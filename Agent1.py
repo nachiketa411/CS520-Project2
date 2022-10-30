@@ -1,6 +1,7 @@
 import copy
 import random
 
+from Constants import NO_OF_STEPS_1
 from Agent import Agent
 from Predator import Predator
 from Prey import Prey
@@ -10,8 +11,34 @@ from BiBFS import BidirectionalSearch
 class Agent1(Agent):
 
     def move_agent(self):
-        a=self.get_next_move()
-        print(a)
+        # Return 1 for Success, -1 when predator catches the Agent and 0 when counter exhausts
+        count = 0
+        while count <= NO_OF_STEPS_1:
+            next_move = self.get_next_move()
+            if next_move == -1:
+                print("Even prayers can't save me.")
+                return [count, -2]
+            self.currPos = next_move
+            self.path.append(next_move)
+            # print("Inside Agent",self.graph)
+            self.prey.take_next_move(copy.deepcopy(self.graph))
+            self.predator.take_next_move()
+
+            # print("For count = ", count, "----------------")
+            # print("Agent: ", self.currPos)
+            # print("Prey: ", self.prey.currPos)
+            # print("Predator", self.predator.currPos)
+
+            if self.currPos == self.prey.currPos:
+                print("Yippiieeee")
+                return [count, 1]
+                break
+            elif self.currPos == self.predator.currPos:
+                print("Ded")
+                return [count, -1]
+                break
+            count += 1
+        return [count, 0]
 
     def get_next_move(self):
         neighbours = self.graph[self.currPos]
@@ -53,10 +80,10 @@ class Agent1(Agent):
 
         # Logic for Agent 1
 
-        best_neighbour=[]
+        best_neighbour = []
         # Neighbors that are closer to the Prey and farther from the Predator.
         for i in neighbours:
-            if len_agent_prey[i]<len(currpos_to_prey) and (len_agent_predator[i] > len(currpos_to_predator)):
+            if len_agent_prey[i] < len(currpos_to_prey) and (len_agent_predator[i] > len(currpos_to_predator)):
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -64,7 +91,7 @@ class Agent1(Agent):
 
         # Neighbors that are closer to the Prey and not closer to the Predator.
         for i in neighbours:
-            if len_agent_prey[i]<len(currpos_to_prey) and (len_agent_predator[i] == len(currpos_to_predator)):
+            if len_agent_prey[i] < len(currpos_to_prey) and (len_agent_predator[i] == len(currpos_to_predator)):
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -103,8 +130,7 @@ class Agent1(Agent):
             return random.choice(best_neighbour)
 
         # Sit still and pray.
-        return best_neighbour
-
+        return -1
 
     def find_path(self, neighbours, pos_y):
         path_dictionary = {}

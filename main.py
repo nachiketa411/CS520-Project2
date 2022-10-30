@@ -12,21 +12,26 @@ if __name__ == '__main__':
     graph_1 = Graph()
     visualize(graph_1)
 
-    prey = Prey(graph_1)
-    predator = Predator(graph_1)
-    print('Prey position: ', prey.currPos)
-    print("Test",graph_1.graph)
-    agent1 = Agent1(prey, graph_1.graph)
-    agent1.initialize(predator)
+    print("*********************************")
 
-    # change this with each agent
-    predator.initialize(agent1)
-    print('Agent location: ', agent1.currPos)
-    print('Prey location: ', agent1.prey.currPos)
-    print('Predator Object agent location: ', agent1.predator.currPos)
+    successRate=0
+    for i in range(10):
+        prey = Prey(graph_1)
+        predator = Predator(graph_1)
+        print('Prey position: ', prey.currPos)
+        print('Predator position: ', predator.currPos)
+        agent1 = Agent1(prey, graph_1.graph)
+        agent1.initialize(predator)
 
-    prey.take_next_move(graph_1)
-    predator.take_next_move()
-    agent1.move_agent()
+        # change this with each agent
+        predator.initialize(agent1)
+        print('Agent location: ', agent1.currPos)
+        steps_taken = agent1.move_agent()
+        if steps_taken[1]==1:
+            successRate+=1
+        print("No of steps: ",steps_taken[0])
+        print("------------------------------------")
+
+    print("Success Rate is: ",successRate)
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

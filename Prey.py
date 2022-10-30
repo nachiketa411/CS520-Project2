@@ -9,7 +9,8 @@ class Prey:
         self.path.append(self.currPos)
 
     def take_next_move(self, graph_dict):
-        my_neighbours = copy.deepcopy(list(graph_dict.graph[self.currPos]))
+        #print(graph_dict)
+        my_neighbours = list(graph_dict[self.currPos])
         my_neighbours.append(self.currPos)
         next_move = random.choice(my_neighbours)
         self.currPos = next_move
