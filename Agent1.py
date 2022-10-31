@@ -16,6 +16,8 @@ class Agent1(Agent):
         while count <= NO_OF_STEPS_1:
             next_move = self.get_next_move()
             if next_move == -1:
+                self.prey.take_next_move(copy.deepcopy(self.graph))
+                self.predator.take_next_move()
                 count+=1
                 continue
             self.currPos = next_move
@@ -24,16 +26,18 @@ class Agent1(Agent):
             self.prey.take_next_move(copy.deepcopy(self.graph))
             self.predator.take_next_move()
 
-            # print("For count = ", count, "----------------")
+            # print("For count = ", count, "###################")
             # print("Agent: ", self.currPos)
             # print("Prey: ", self.prey.currPos)
             # print("Predator", self.predator.currPos)
 
             if self.currPos == self.prey.currPos:
                 print("Yippiieeee")
+                count+=1
                 return [count, 1]
             elif self.currPos == self.predator.currPos:
                 print("Ded")
+                count+=1
                 return [count, -1]
             count += 1
         return [count, 0]
