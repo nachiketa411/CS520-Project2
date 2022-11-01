@@ -1,6 +1,9 @@
 # This is a sample Python script.
+import json
 
 from Agent1 import Agent1
+from Agent2 import Agent2
+from Constants import ENVIRONMENT_PATH, GRAPH_DIST_PATH
 from Graph import Graph
 from GraphVisualizer import visualize
 from BiBFS import BidirectionalSearch
@@ -14,10 +17,47 @@ if __name__ == '__main__':
     failure_rate_1=0
     failure_rate_2=0
 
+    # # ---------------------Write to JSON-------------------
+    # graphs = {}
+    # graph_distance = {}
+    # for k in range(100):
+    #     graph = Graph()
+    #     graphs[k] = graph.graph
+    #     graph_distance[k] = graph.distance_from_each_node
+    #
+    # json_object = json.dumps(graphs, indent=4)
+    # json_object_2 = json.dumps(graph_distance, indent=4)
+    # with open(ENVIRONMENT_PATH, "w") as outfile:
+    #     outfile.write(json_object)
+    #
+    # with open(GRAPH_DIST_PATH, "w") as outfile2:
+    #     outfile2.write(json_object_2)
+    # # ----------------------------------------------------
+
+    # ---------------------Read from JSON-------------------
+    with open(ENVIRONMENT_PATH, "r") as env_file:
+        json_object = json.load(env_file)
+
+    # print(json_object)
+    # print(json_object.items())
+    # convertedGraph = {int(k): [int(i) for i in v] for k, v in json_object.items()}
+    converted_graph = {}
+    print(json_object)
+    for g_id in json_object.items():
+        graph_id = int(g_id[0])
+        graph = {}
+        for k in g_id[1]:
+            graph[int(k)] = g_id[1][k]
+        converted_graph[graph_id] = graph
+    # ----------------------------------------------------
+
     for k in range(100):
 
-        graph_1 = Graph()
-        #visualize(graph_1)
+        # graph_1 = Graph()
+        # visualize(graph_1)
+
+        graph_1 = converted_graph[k]
+
         print("*********************************")
 
         successRate = 0
@@ -27,10 +67,13 @@ if __name__ == '__main__':
             predator = Predator(graph_1)
             print('Prey position: ', prey.currPos)
             print('Predator position: ', predator.currPos)
-            agent1 = Agent1(prey, graph_1.graph)
-            agent1.initialize(predator)
+            # agent1 = Agent1(prey, graph_1.graph)
+            # agent1 = Agent1(prey, graph_1)
 
             # change this with each agent
+            agent1 = Agent2(prey, graph_1)
+            agent1.initialize(predator)
+
             predator.initialize(agent1)
             print('Agent location: ', agent1.currPos)
             steps_taken = agent1.move_agent()
@@ -54,8 +97,8 @@ if __name__ == '__main__':
         success_of_Agent+=successRate
 
     print("Final Success Rate: ",success_of_Agent)
-    print("Marr Gaya Mai: ",failure_rate_1)
-    print("Ghoom Gaya Mai: ",failure_rate_2)
+    print("Marr Gaya Mai: ", failure_rate_1)
+    print("Ghoom Gaya Mai: ", failure_rate_2)
 
     # graph_1 = Graph()
     #

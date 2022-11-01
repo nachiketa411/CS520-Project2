@@ -6,8 +6,10 @@ from BiBFS import BidirectionalSearch
 
 class Predator:
     def __init__(self, graph_dict):
-        node_list = list(graph_dict.graph.keys())
-        self.graph = graph_dict.graph
+        # node_list = list(graph_dict.graph.keys())
+        # self.graph = graph_dict.graph
+        node_list = list(graph_dict.keys())
+        self.graph = graph_dict
         self.currPos = random.choice(node_list)
         self.path = []
         self.path.append(self.currPos)

@@ -3,7 +3,8 @@ import copy
 
 class Prey:
     def __init__(self, graph_dict):
-        node_list = list(graph_dict.graph.keys())
+        # node_list = list(graph_dict.graph.keys())
+        node_list = list(graph_dict.keys())
         self.currPos = random.choice(node_list)
         self.path = []
         self.path.append(self.currPos)
