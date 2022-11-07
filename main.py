@@ -51,54 +51,62 @@ if __name__ == '__main__':
         converted_graph[graph_id] = graph
     # ----------------------------------------------------
 
-    for k in range(100):
+    for k in range(1):
 
         # graph_1 = Graph()
         # visualize(graph_1)
 
         graph_1 = converted_graph[k]
 
-        print("*********************************")
-
-        successRate = 0
-        for i in range(30):
-
-            prey = Prey(graph_1)
-            predator = Predator(graph_1)
-            print('Prey position: ', prey.currPos)
-            print('Predator position: ', predator.currPos)
-            # agent1 = Agent1(prey, graph_1.graph)
-            # agent1 = Agent1(prey, graph_1)
-
-            # change this with each agent
-            agent1 = Agent2(prey, graph_1)
-            agent1.initialize(predator)
-
-            predator.initialize(agent1)
-            print('Agent location: ', agent1.currPos)
-            steps_taken = agent1.move_agent()
-            if steps_taken[1] == 1:
-                successRate += 1
-            if steps_taken[1]==0:
-                failure_rate_2+=1
-            if steps_taken[1]==-1:
-                failure_rate_1+=1
-            print("No of steps: ", steps_taken[0])
-            print("Agent:", agent1.path)
-            print("Prey:",prey.path)
-            print("Predator:",predator.path)
-            del prey
-            del predator
-            del agent1
-            print("------------------------------------")
-
-        del graph_1
-        print("Success Rate for #",k," is: ", successRate)
-        success_of_Agent+=successRate
-
-    print("Final Success Rate: ",success_of_Agent)
-    print("Marr Gaya Mai: ", failure_rate_1)
-    print("Ghoom Gaya Mai: ", failure_rate_2)
+        transition_matrix=[]
+        for i in range(len(graph_1)):
+            transition_matrix.append([0]*50)
+            neighbours=graph_1[i]
+            k=1/(len(neighbours)+1)
+            transition_matrix[i][i]=k
+            for j in neighbours:
+                transition_matrix[i][j]=k
+    #     print("*********************************")
+    #
+    #     successRate = 0
+    #     for i in range(30):
+    #
+    #         prey = Prey(graph_1)
+    #         predator = Predator(graph_1)
+    #         print('Prey position: ', prey.currPos)
+    #         print('Predator position: ', predator.currPos)
+    #         # agent1 = Agent1(prey, graph_1.graph)
+    #         # agent1 = Agent1(prey, graph_1)
+    #
+    #         # change this with each agent
+    #         agent1 = Agent2(prey, graph_1)
+    #         agent1.initialize(predator)
+    #
+    #         predator.initialize(agent1)
+    #         print('Agent location: ', agent1.currPos)
+    #         steps_taken = agent1.move_agent()
+    #         if steps_taken[1] == 1:
+    #             successRate += 1
+    #         if steps_taken[1]==0:
+    #             failure_rate_2+=1
+    #         if steps_taken[1]==-1:
+    #             failure_rate_1+=1
+    #         print("No of steps: ", steps_taken[0])
+    #         print("Agent:", agent1.path)
+    #         print("Prey:",prey.path)
+    #         print("Predator:",predator.path)
+    #         del prey
+    #         del predator
+    #         del agent1
+    #         print("------------------------------------")
+    #
+    #     del graph_1
+    #     print("Success Rate for #",k," is: ", successRate)
+    #     success_of_Agent+=successRate
+    #
+    # print("Final Success Rate: ",success_of_Agent)
+    # print("Marr Gaya Mai: ", failure_rate_1)
+    # print("Ghoom Gaya Mai: ", failure_rate_2)
 
     # graph_1 = Graph()
     #

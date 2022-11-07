@@ -80,6 +80,7 @@ class BidirectionalSearch:
     # Function for bidirectional searching
     def bidirectional_search(self, src, dest):
         # Add source to queue and mark visited as True and add its parent as -1
+        #print(dest)
         self.src_queue.append(src)
         self.src_visited[src] = True
         self.src_parent[src] = -1
