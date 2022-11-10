@@ -17,6 +17,7 @@ class Agent3(Agent):
 
         while count <= NO_OF_STEPS_1:
 
+            print(count)
             # Selecting a node to survey.
             to_survey = self.select_node(belief_mat)
 
@@ -39,7 +40,8 @@ class Agent3(Agent):
                     print("Yippiieeee")
                     return [count, 1]
 
-                # *********Write something here belief update***************
+                belief_mat = self.update_belief_using_transition_mat(belief_mat, trans_mat)
+                print("Agent Chose to not move: ", sum(belief_mat))
 
                 self.predator.take_next_move()
                 if self.currPos == self.predator.currPos:
@@ -54,6 +56,9 @@ class Agent3(Agent):
 
             # Check if prey is where you moved.
             belief_mat = self.update_belief(belief_mat, next_move)
+            print("After Agent moved", sum(belief_mat))
+
+            # Checks if Prey is in current position
             if belief_mat[next_move] == 1:
                 print("Yippiieeee")
                 count += 1
@@ -72,7 +77,8 @@ class Agent3(Agent):
                 count += 1
                 return [count, -1]
 
-            # Update belief Matrix As per Transition Matrix of Prey below.
+            belief_mat = self.update_belief_using_transition_mat(belief_mat, trans_mat)
+            print("After prey moved",sum(belief_mat))
 
             count += 1
         return [count, 0]
@@ -169,11 +175,11 @@ class Agent3(Agent):
         while True:
             max_in_belief_mat = max(belief_mat)
             possible_nodes = []
-            for i in belief_mat:
+            for i in range(len(belief_mat)):
                 if belief_mat[i] == max_in_belief_mat:
                     possible_nodes.append(i)
             to_survey = random.choice(possible_nodes)
-            if to_survey != self.currPos and len(to_survey) != 0:
+            if to_survey != self.currPos and to_survey is not None:
                 return to_survey
 
     def update_belief(self, belief_mat, node):
@@ -183,6 +189,16 @@ class Agent3(Agent):
         else:
             temp = 1 - belief_mat[node]
             belief_mat[node] = 0
-            for i in belief_mat:
+            for i in range(len(belief_mat)):
                 belief_mat[i] = belief_mat[i] / temp
         return belief_mat
+
+    def update_belief_using_transition_mat(self, belief_mat, transition_mat):
+        new_belief_mat = [0] * NO_OF_NODES
+        for i in range(len(belief_mat)):
+            # P(Prey in i)= Summation(P(Prey in neighbour of i)*P(Prey in neighbour of i|Prey in i))
+            summation = 0
+            for j in range(len(transition_mat[i])):
+                summation += (belief_mat[j] * transition_mat[i][j])
+            new_belief_mat[i] = summation
+        return new_belief_mat

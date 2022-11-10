@@ -3,6 +3,7 @@ import json
 
 from Agent1 import Agent1
 from Agent2 import Agent2
+from Agent3 import Agent3
 from Constants import ENVIRONMENT_PATH, GRAPH_DIST_PATH
 from Graph import Graph
 from GraphVisualizer import visualize
@@ -66,47 +67,47 @@ if __name__ == '__main__':
             transition_matrix[i][i]=k
             for j in neighbours:
                 transition_matrix[i][j]=k
-    #     print("*********************************")
-    #
-    #     successRate = 0
-    #     for i in range(30):
-    #
-    #         prey = Prey(graph_1)
-    #         predator = Predator(graph_1)
-    #         print('Prey position: ', prey.currPos)
-    #         print('Predator position: ', predator.currPos)
-    #         # agent1 = Agent1(prey, graph_1.graph)
-    #         # agent1 = Agent1(prey, graph_1)
-    #
-    #         # change this with each agent
-    #         agent1 = Agent2(prey, graph_1)
-    #         agent1.initialize(predator)
-    #
-    #         predator.initialize(agent1)
-    #         print('Agent location: ', agent1.currPos)
-    #         steps_taken = agent1.move_agent()
-    #         if steps_taken[1] == 1:
-    #             successRate += 1
-    #         if steps_taken[1]==0:
-    #             failure_rate_2+=1
-    #         if steps_taken[1]==-1:
-    #             failure_rate_1+=1
-    #         print("No of steps: ", steps_taken[0])
-    #         print("Agent:", agent1.path)
-    #         print("Prey:",prey.path)
-    #         print("Predator:",predator.path)
-    #         del prey
-    #         del predator
-    #         del agent1
-    #         print("------------------------------------")
-    #
-    #     del graph_1
-    #     print("Success Rate for #",k," is: ", successRate)
-    #     success_of_Agent+=successRate
-    #
-    # print("Final Success Rate: ",success_of_Agent)
-    # print("Marr Gaya Mai: ", failure_rate_1)
-    # print("Ghoom Gaya Mai: ", failure_rate_2)
+        print("*********************************")
+
+        successRate = 0
+        for i in range(1):
+
+            prey = Prey(graph_1)
+            predator = Predator(graph_1)
+            print('Prey position: ', prey.currPos)
+            print('Predator position: ', predator.currPos)
+            # agent1 = Agent1(prey, graph_1.graph)
+            # agent1 = Agent1(prey, graph_1)
+
+            # change this with each agent
+            agent1 = Agent3(prey, graph_1)
+            agent1.initialize(predator)
+
+            predator.initialize(agent1)
+            print('Agent location: ', agent1.currPos)
+            steps_taken = agent1.move_agent(transition_matrix)
+            if steps_taken[1] == 1:
+                successRate += 1
+            if steps_taken[1]==0:
+                failure_rate_2+=1
+            if steps_taken[1]==-1:
+                failure_rate_1+=1
+            print("No of steps: ", steps_taken[0])
+            print("Agent:", agent1.path)
+            print("Prey:",prey.path)
+            print("Predator:",predator.path)
+            del prey
+            del predator
+            del agent1
+            print("------------------------------------")
+
+        del graph_1
+        print("Success Rate for #",k," is: ", successRate)
+        success_of_Agent+=successRate
+
+    print("Final Success Rate: ",success_of_Agent)
+    print("Marr Gaya Mai: ", failure_rate_1)
+    print("Ghoom Gaya Mai: ", failure_rate_2)
 
     # graph_1 = Graph()
     #
