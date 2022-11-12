@@ -52,7 +52,7 @@ if __name__ == '__main__':
         converted_graph[graph_id] = graph
     # ----------------------------------------------------
 
-    for k in range(1):
+    for k in range(100):
 
         # graph_1 = Graph()
         # visualize(graph_1)
@@ -70,7 +70,7 @@ if __name__ == '__main__':
         print("*********************************")
 
         successRate = 0
-        for i in range(1):
+        for i in range(30):
 
             prey = Prey(graph_1)
             predator = Predator(graph_1)

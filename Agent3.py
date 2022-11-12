@@ -24,7 +24,7 @@ class Agent3(Agent):
             # Survey the selected Node and update the belief matrix
             belief_mat = self.update_belief(belief_mat, to_survey)
 
-            print("After Survey:", sum(belief_mat))
+            print("After Survey:", belief_mat, sum(belief_mat))
 
             # Selecting a node with the highest probability and moving towards it.
             to_move = self.select_node(belief_mat)
@@ -56,7 +56,7 @@ class Agent3(Agent):
 
             # Check if prey is where you moved.
             belief_mat = self.update_belief(belief_mat, next_move)
-            print("After Agent moved", sum(belief_mat))
+            print("After Agent moved to ", next_move, belief_mat, sum(belief_mat))
 
             # Checks if Prey is in current position
             if belief_mat[next_move] == 1:
@@ -78,7 +78,7 @@ class Agent3(Agent):
                 return [count, -1]
 
             belief_mat = self.update_belief_using_transition_mat(belief_mat, trans_mat)
-            print("After prey moved",sum(belief_mat))
+            print("After prey moved", belief_mat, sum(belief_mat))
 
             count += 1
         return [count, 0]
@@ -172,15 +172,17 @@ class Agent3(Agent):
         return path_dictionary
 
     def select_node(self, belief_mat):
-        while True:
-            max_in_belief_mat = max(belief_mat)
-            possible_nodes = []
-            for i in range(len(belief_mat)):
-                if belief_mat[i] == max_in_belief_mat:
-                    possible_nodes.append(i)
-            to_survey = random.choice(possible_nodes)
-            if to_survey != self.currPos and to_survey is not None:
-                return to_survey
+        max_in_belief_mat = max(belief_mat)
+        possible_nodes = []
+        #print("Inside ",belief_mat,self.currPos,max_in_belief_mat)
+        for i in range(len(belief_mat)):
+            if belief_mat[i] == max_in_belief_mat:
+                possible_nodes.append(i)
+        if possible_nodes:
+            return random.choice(possible_nodes)
+        else:
+            print("Bhayankar Error")
+            return -1
 
     def update_belief(self, belief_mat, node):
         if node == self.prey.currPos:
@@ -199,6 +201,6 @@ class Agent3(Agent):
             # P(Prey in i)= Summation(P(Prey in neighbour of i)*P(Prey in neighbour of i|Prey in i))
             summation = 0
             for j in range(len(transition_mat[i])):
-                summation += (belief_mat[j] * transition_mat[i][j])
+                summation += (belief_mat[j] * transition_mat[j][i])
             new_belief_mat[i] = summation
         return new_belief_mat
