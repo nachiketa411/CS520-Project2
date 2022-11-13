@@ -44,7 +44,13 @@ class Agent5(Agent):
                     return [count, 1]
                 print("Agent Chose to not move: ", sum(belief_mat))
 
-                self.predator.take_next_move()
+                # Predator moves closer to prey with a probability of 0.6
+                decision=random.uniform(0,1)
+                if decision<0.6:
+                    self.predator.take_next_move()
+                else:
+                    self.predator.currPos=random.choice(self.graph[self.predator.currPos])
+                    self.predator.path.append(self.predator.currPos)
                 belief_mat = self.update_belief_using_transition_mat(belief_mat, dist_dict)
                 if self.currPos == self.predator.currPos:
                     print("Ded")
@@ -74,7 +80,13 @@ class Agent5(Agent):
                 count += 1
                 return [count, 1]
 
-            self.predator.take_next_move()
+            # Predator moves closer to prey with a probability of 0.6
+            decision = random.uniform(0, 1)
+            if decision < 0.6:
+                self.predator.take_next_move()
+            else:
+                self.predator.currPos = random.choice(self.graph[self.predator.currPos])
+                self.predator.path.append(self.predator.currPos)
 
             if self.currPos == self.predator.currPos:
                 print("Ded")
