@@ -12,5 +12,5 @@ NO_OF_NODES = 50
 NO_OF_NEXT_STEP_PREDICTIONS_FOR_AGENT_2 = 10
 
 # Need to use relative paths instead of Absolute
-ENVIRONMENT_PATH = "C:\\Studies and Work\\Rutgers\\Semester 1\\CS-520\\Projects\\Project 2\\ENV\\Environment.json"
-GRAPH_DIST_PATH = "C:\\Studies and Work\\Rutgers\\Semester 1\\CS-520\\Projects\\Project 2\\ENV\\Node Distances.json"
+ENVIRONMENT_PATH = "C:\\Users\\rutvi\\PycharmProjects\\CS520-Project2\\ENV\\Environment.json"
+GRAPH_DIST_PATH = "C:\\Users\\rutvi\\PycharmProjects\\CS520-Project2\\ENV\\Node Distances.json"
