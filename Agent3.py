@@ -10,7 +10,7 @@ class Agent3(Agent):
     def move_agent(self, trans_mat):
 
         # Creating a belief List
-        belief_mat = [1 / 49] * NO_OF_NODES
+        belief_mat = [1 / (NO_OF_NODES - 1)] * NO_OF_NODES
         belief_mat[self.currPos] = 0
 
         count = 0
@@ -174,7 +174,7 @@ class Agent3(Agent):
     def select_node(self, belief_mat):
         max_in_belief_mat = max(belief_mat)
         possible_nodes = []
-        #print("Inside ",belief_mat,self.currPos,max_in_belief_mat)
+        # print("Inside ",belief_mat,self.currPos,max_in_belief_mat)
         for i in range(len(belief_mat)):
             if belief_mat[i] == max_in_belief_mat:
                 possible_nodes.append(i)
@@ -186,7 +186,7 @@ class Agent3(Agent):
 
     def update_belief(self, belief_mat, node):
         if node == self.prey.currPos:
-            belief_mat = [0] * 50
+            belief_mat = [0] * NO_OF_NODES
             belief_mat[node] = 1
         else:
             temp = 1 - belief_mat[node]

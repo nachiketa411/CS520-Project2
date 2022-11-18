@@ -2,7 +2,8 @@
 import json
 
 from Agent1 import Agent1
-from Agent2 import Agent2
+from Agent2_1 import Agent2_1
+from Agent2_2 import Agent2_2
 from Agent3 import Agent3
 from Agent5 import Agent5
 
@@ -74,16 +75,18 @@ if __name__ == '__main__':
         # visualize(graph_1)
 
         graph_1 = converted_graph[k]
+        graph_distances = converted_distances[k]
+        print('Graph Distances: ', graph_distances)
 
-        # transition_matrix = []
-        # for i in range(len(graph_1)):
-        #     transition_matrix.append([0] * 50)
-        #     neighbours = graph_1[i]
-        #     k = 1 / (len(neighbours) + 1)
-        #     transition_matrix[i][i] = k
-        #     for j in neighbours:
-        #         transition_matrix[i][j] = k
-        # print("*********************************")
+        transition_matrix = []
+        for i in range(len(graph_1)):
+            transition_matrix.append([0] * 50)
+            neighbours = graph_1[i]
+            k = 1 / (len(neighbours) + 1)
+            transition_matrix[i][i] = k
+            for j in neighbours:
+                transition_matrix[i][j] = k
+        print("*********************************")
 
         successRate = 0
         for i in range(30):
@@ -94,12 +97,18 @@ if __name__ == '__main__':
             print('Predator position: ', predator.currPos)
 
             # change this with each agent
-            agent1 = Agent5(prey, graph_1)
+            # agent1 = Agent1(prey, graph_1)
+            agent1 = Agent2_1(prey, graph_1)
+            # agent1 = Agent2_2(prey, graph_1)
+            # agent1 = Agent5(prey, graph_1)
             agent1.initialize(predator)
             predator.initialize(agent1)
 
             print('Agent location: ', agent1.currPos)
-            steps_taken = agent1.move_agent(converted_distances[k])
+            # steps_taken = agent1.move_agent()
+            steps_taken = agent1.move_agent(transition_matrix, graph_distances)
+            # steps_taken = agent1.move_agent(transition_matrix)
+            # steps_taken = agent1.move_agent(graph_distances)
             if steps_taken[1] == 1:
                 successRate += 1
             if steps_taken[1] == 0:
