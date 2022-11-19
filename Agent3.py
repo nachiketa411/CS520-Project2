@@ -17,14 +17,14 @@ class Agent3(Agent):
 
         while count <= NO_OF_STEPS_1:
 
-            print(count)
+            # print(count)
             # Selecting a node to survey.
             to_survey = self.select_node(belief_mat)
 
             # Survey the selected Node and update the belief matrix
             belief_mat = self.update_belief(belief_mat, to_survey)
 
-            print("After Survey:", belief_mat, sum(belief_mat))
+            # print("After Survey:", belief_mat, sum(belief_mat))
 
             # Selecting a node with the highest probability and moving towards it.
             to_move = self.select_node(belief_mat)
@@ -41,7 +41,7 @@ class Agent3(Agent):
                     return [count, 1]
 
                 belief_mat = self.update_belief_using_transition_mat(belief_mat, trans_mat)
-                print("Agent Chose to not move: ", sum(belief_mat))
+                # print("Agent Chose to not move: ", sum(belief_mat))
 
                 self.predator.take_next_move()
                 if self.currPos == self.predator.currPos:
@@ -56,7 +56,7 @@ class Agent3(Agent):
 
             # Check if prey is where you moved.
             belief_mat = self.update_belief(belief_mat, next_move)
-            print("After Agent moved to ", next_move, belief_mat, sum(belief_mat))
+            # print("After Agent moved to ", next_move, belief_mat, sum(belief_mat))
 
             # Checks if Prey is in current position
             if belief_mat[next_move] == 1:
@@ -78,7 +78,7 @@ class Agent3(Agent):
                 return [count, -1]
 
             belief_mat = self.update_belief_using_transition_mat(belief_mat, trans_mat)
-            print("After prey moved", belief_mat, sum(belief_mat))
+            # print("After prey moved", belief_mat, sum(belief_mat))
 
             count += 1
         return [count, 0]
@@ -171,7 +171,7 @@ class Agent3(Agent):
         if possible_nodes:
             return random.choice(possible_nodes)
         else:
-            print("Bhayankar Error")
+            # print("Bhayankar Error")
             return -1
 
     def update_belief(self, belief_mat, node):

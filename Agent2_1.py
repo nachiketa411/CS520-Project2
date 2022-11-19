@@ -56,14 +56,14 @@ class Agent2_1(Agent):
             belief_mat[self.prey.currPos] = 1
 
             if self.currPos == self.prey.currPos:
-                print("Yippiieeee")
+                # print("Yippiieeee")
                 count += 1
                 return [count, 1]
 
             self.predator.take_next_move()
 
             if self.currPos == self.predator.currPos:
-                print("Ded")
+                # print("Ded")
                 count += 1
                 return [count, -1]
 
@@ -98,9 +98,6 @@ class Agent2_1(Agent):
         for i in neighbours:
             # if len_agent_prey[i] < len(currpos_to_prey) and (len_agent_predator[i] > len(currpos_to_predator)):
             if expected_distance[i] < len(currpos_to_prey) and (len_agent_predator[i] > len(currpos_to_predator)):
-                # print('1. Expected Neighbour[i]: ', expected_distance[i])
-                # print('Neighbour: ', i)
-                # print('Dist of Curr Pos to Prey: ', len(currpos_to_prey))
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -109,9 +106,6 @@ class Agent2_1(Agent):
         # Neighbors that are closer to the Prey and not closer to the Predator.
         for i in neighbours:
             if expected_distance[i] < len(currpos_to_prey) and (len_agent_predator[i] == len(currpos_to_predator)):
-                # print('2. Expected Neighbour[i]: ', expected_distance[i])
-                # print('Neighbour: ', i)
-                # print('Dist of Curr Pos to Prey: ', len(currpos_to_prey))
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -120,9 +114,6 @@ class Agent2_1(Agent):
         # Neighbors that are not farther from the Prey and farther from the Predator.
         for i in neighbours:
             if expected_distance[i] == len(currpos_to_prey) and (len_agent_predator[i] > len(currpos_to_predator)):
-                # print('3. Expected Neighbour[i]: ', expected_distance[i])
-                # print('Neighbour: ', i)
-                # print('Dist of Curr Pos to Prey: ', len(currpos_to_prey))
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -131,9 +122,6 @@ class Agent2_1(Agent):
         # Neighbors that are not farther from the Prey and not closer to the Predator.
         for i in neighbours:
             if expected_distance[i] == len(currpos_to_prey) and (len_agent_predator[i] == len(currpos_to_predator)):
-                # print('4. Expected Neighbour[i]: ', expected_distance[i])
-                # print('Neighbour: ', i)
-                # print('Dist of Curr Pos to Prey: ', len(currpos_to_prey))
                 best_neighbour.append(i)
 
         if best_neighbour:

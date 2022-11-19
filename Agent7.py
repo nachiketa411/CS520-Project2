@@ -21,7 +21,7 @@ class Agent7(Agent):
 
         while count <= NO_OF_STEPS_1:
 
-            print(count)
+            # print(count)
             # Check if Agent knows where the predator is:
             if 1 in belief_mat_predator:
                 # Choose a node to survey for the prey
@@ -32,7 +32,7 @@ class Agent7(Agent):
                 to_survey = self.select_node_predator(belief_mat_predator, dist_dict)
                 belief_mat_predator = self.update_belief_predator(belief_mat_predator, to_survey)
 
-            print("After Survey:", sum(belief_mat_predator), sum(belief_mat_prey))
+            # print("After Survey:", sum(belief_mat_predator), sum(belief_mat_prey))
 
             # Selecting a node with the highest probability and moving towards it.
             predicted_pred_pos = self.select_node_predator(belief_mat_predator, dist_dict)
@@ -64,7 +64,7 @@ class Agent7(Agent):
                     print("Ded")
                     return [count, -1]
 
-                print("After Agent chose to not move", sum(belief_mat_predator), sum(belief_mat_prey))
+                # print("After Agent chose to not move", sum(belief_mat_predator), sum(belief_mat_prey))
                 count += 1
                 continue
 
@@ -86,7 +86,7 @@ class Agent7(Agent):
             belief_mat_prey = self.update_belief_prey(belief_mat_prey, next_move)
             belief_mat_predator = self.update_belief_predator(belief_mat_predator, next_move)
 
-            print("After Agent moves: ", sum(belief_mat_predator), sum(belief_mat_prey))
+            # print("After Agent moves: ", sum(belief_mat_predator), sum(belief_mat_prey))
 
             self.prey.take_next_move(copy.deepcopy(self.graph))
             if self.currPos == self.prey.currPos:
@@ -109,7 +109,7 @@ class Agent7(Agent):
 
             belief_mat_prey = self.update_belief_using_transition_mat(belief_mat_prey, transition_mat)
             belief_mat_predator = self.update_belief_using_distance_dic(belief_mat_predator, dist_dict)
-            print("After prey and predator moved", sum(belief_mat_predator), sum(belief_mat_prey))
+            # print("After prey and predator moved", sum(belief_mat_predator), sum(belief_mat_prey))
 
             count += 1
         return [count, 0]
@@ -225,7 +225,7 @@ class Agent7(Agent):
         if possible_nodes:
             return random.choice(possible_nodes)
         else:
-            print("Bhayankar Error")
+            # print("Bhayankar Error")
             return -1
 
     def update_belief_predator(self, belief_mat, node):
