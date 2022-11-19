@@ -27,7 +27,6 @@ class Agent5(Agent):
             # Survey the selected Node and update the belief matrix
             belief_mat = self.update_belief(belief_mat, to_survey)
 
-
             print("After Survey:", sum(belief_mat))
 
             # Selecting a node with the highest probability and moving towards it.
@@ -98,7 +97,7 @@ class Agent5(Agent):
                 return [count, -1]
 
             belief_mat = self.update_belief_using_transition_mat(belief_mat, dist_dict)
-            print("After predator moved", sum(belief_mat))
+            print("After prey moved", sum(belief_mat))
 
             count += 1
         return [count, 0]

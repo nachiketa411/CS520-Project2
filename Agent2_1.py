@@ -158,16 +158,6 @@ class Agent2_1(Agent):
         # Sit still and pray.
         return -1
 
-    def find_path(self, neighbours, pos_y):
-        path_dictionary = {}
-        for i in range(len(neighbours)):
-            temp = copy.deepcopy(self.graph)
-            bi_bfs = BidirectionalSearch(temp)
-            x = neighbours[i]
-            y = pos_y
-            path = bi_bfs.bidirectional_search(x, y)
-            path_dictionary[neighbours[i]] = path
-        return path_dictionary
 
     # def reverse_dict(self, mydict):
     #     reversed_dict = {}

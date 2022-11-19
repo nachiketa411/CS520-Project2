@@ -1,13 +1,15 @@
 import copy
 import random
 
+import numpy as np
+
 from Agent import Agent
 from BiBFS import BidirectionalSearch
-from Constants import NO_OF_NODES, NO_OF_STEPS_4
+from Constants import NO_OF_NODES, NO_OF_STEPS_4, PROB_OF_DISTRACTED_PREDATOR
 
 
 class Agent6_1(Agent):
-    def move_agent(self, dist_dict):
+    def move_agent(self, graph_distances):
         # Return 1 for Success, -1 when predator catches the Agent and 0 when counter exhausts
 
         belief_mat = [0] * NO_OF_NODES
@@ -19,16 +21,33 @@ class Agent6_1(Agent):
 
             print(count)
             # Selecting a node to survey.
-            to_survey = self.select_node(belief_mat, dist_dict)
+            to_survey = self.select_node(belief_mat, graph_distances)
 
             # Survey the selected Node and update the belief matrix
             belief_mat = self.update_belief(belief_mat, to_survey)
-
-            print("After Survey:", sum(belief_mat))
+            #
+            # print('Belief Matrix: ', belief_mat)
+            # print("Belief Sum After Survey:", sum(belief_mat))
 
             # Selecting a node with the highest probability and moving towards it.
-            predicted_pred_pos = self.select_node(belief_mat, dist_dict)
-            next_move = self.get_next_move(predicted_pred_pos)
+            predicted_pred_pos = self.select_node(belief_mat, graph_distances)
+
+            # # convert the transition dictionary to a matrix to calculate expected distance of the predator
+            # trans_mat = self.convert_dict_to_transition_matrix(graph_distances)
+
+            # expected_distances_of_pred_from_agent = self.get_expected_distance_of_prey_from_agent(belief_mat.copy(),
+            #                                                                                       trans_mat.copy(),
+            #                                                                                       self.currPos,
+            #                                                                                       predicted_pred_pos,
+            #                                                                                       graph_distances)
+
+            expected_distances_of_pred_from_agent = self.get_expected_distance_of_predator_from_agent(belief_mat.copy(),
+                                                                                                      self.currPos,
+                                                                                                      graph_distances)
+
+            # print('Expected Distances: ', expected_distances_of_pred_from_agent)
+
+            next_move = self.get_next_move(predicted_pred_pos, expected_distances_of_pred_from_agent)
 
             # When Agent Chooses to stay in its position
             if next_move == -1:
@@ -39,16 +58,20 @@ class Agent6_1(Agent):
                     count += 1
                     print("Yippiieeee")
                     return [count, 1]
-                print("Agent Chose to not move: ", sum(belief_mat))
+                print("Agent Chose to not move. ")
 
                 # Predator moves closer to prey with a probability of 0.6
-                decision=random.uniform(0,1)
-                if decision<0.6:
+                decision = random.uniform(0, 1)
+                if decision < (1 - PROB_OF_DISTRACTED_PREDATOR):
                     self.predator.take_next_move()
                 else:
-                    self.predator.currPos=random.choice(self.graph[self.predator.currPos])
+                    self.predator.currPos = random.choice(self.graph[self.predator.currPos])
                     self.predator.path.append(self.predator.currPos)
-                belief_mat = self.update_belief_using_transition_mat(belief_mat, dist_dict)
+
+                # belief_mat = self.update_belief_using_transition_mat(belief_mat, graph_distances)
+                belief_mat = self.update_belief_after_distracted_predator_moves(belief_mat, self.currPos)
+                print('Belief: ', belief_mat)
+
                 if self.currPos == self.predator.currPos:
                     print("Ded")
                     return [count, -1]
@@ -90,16 +113,21 @@ class Agent6_1(Agent):
                 count += 1
                 return [count, -1]
 
-            belief_mat = self.update_belief_using_transition_mat(belief_mat, dist_dict)
-            print("After prey moved", sum(belief_mat))
+            # belief_mat = self.update_belief_using_transition_mat(belief_mat, graph_distances)
+            belief_mat = self.update_belief_after_distracted_predator_moves(belief_mat, self.currPos)
+            print('Belief: ', belief_mat)
+            print("Belief Sum After Predator moved", sum(belief_mat))
 
             count += 1
         return [count, 0]
 
-    def get_next_move(self, pred_pos):
+    def get_next_move(self, pred_pos, expected_distance):
+
         neighbours = self.graph[self.currPos]
+
         # To find the distance between neighbours of Agent and Predator
-        path_predator = self.find_path(neighbours, pred_pos)
+        # path_predator = self.find_path(neighbours, pred_pos)
+
         # To find the distance between neighbours of Agent and Prey
         path_prey = self.find_path(neighbours, self.prey.currPos)
 
@@ -108,7 +136,7 @@ class Agent6_1(Agent):
         currpos_to_prey = self.find_path([self.currPos], self.prey.currPos)[self.currPos]
 
         # The distance between each neighbour of agent and prey/predator
-        len_agent_predator = {key: len(value) for key, value in path_predator.items()}
+        # len_agent_predator = {key: len(value) for key, value in path_predator.items()}
         len_agent_prey = {key: len(value) for key, value in path_prey.items()}
 
         # Logic for Agent 1
@@ -116,7 +144,7 @@ class Agent6_1(Agent):
         best_neighbour = []
         # Neighbors that are closer to the Prey and farther from the Predator.
         for i in neighbours:
-            if len_agent_prey[i] < len(currpos_to_prey) and (len_agent_predator[i] > len(currpos_to_predator)):
+            if len_agent_prey[i] < len(currpos_to_prey) and (expected_distance[i] > len(currpos_to_predator)):
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -124,7 +152,7 @@ class Agent6_1(Agent):
 
         # Neighbors that are closer to the Prey and not closer to the Predator.
         for i in neighbours:
-            if len_agent_prey[i] < len(currpos_to_prey) and (len_agent_predator[i] == len(currpos_to_predator)):
+            if len_agent_prey[i] < len(currpos_to_prey) and (expected_distance[i] == len(currpos_to_predator)):
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -132,7 +160,7 @@ class Agent6_1(Agent):
 
         # Neighbors that are not farther from the Prey and farther from the Predator.
         for i in neighbours:
-            if len_agent_prey[i] == len(currpos_to_prey) and (len_agent_predator[i] > len(currpos_to_predator)):
+            if len_agent_prey[i] == len(currpos_to_prey) and (expected_distance[i] > len(currpos_to_predator)):
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -140,7 +168,7 @@ class Agent6_1(Agent):
 
         # Neighbors that are not farther from the Prey and not closer to the Predator.
         for i in neighbours:
-            if len_agent_prey[i] == len(currpos_to_prey) and (len_agent_predator[i] == len(currpos_to_predator)):
+            if len_agent_prey[i] == len(currpos_to_prey) and (expected_distance[i] == len(currpos_to_predator)):
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -148,7 +176,7 @@ class Agent6_1(Agent):
 
         # Neighbors that are farther from the Predator.
         for i in neighbours:
-            if len_agent_predator[i] > len(currpos_to_predator):
+            if expected_distance[i] > len(currpos_to_predator):
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -156,7 +184,7 @@ class Agent6_1(Agent):
 
         # Neighbors that are not closer to the Predator.
         for i in neighbours:
-            if len_agent_predator[i] == len(currpos_to_predator):
+            if expected_distance[i] == len(currpos_to_predator):
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -165,16 +193,6 @@ class Agent6_1(Agent):
         # Sit still and pray.
         return -1
 
-    def find_path(self, neighbours, pos_y):
-        path_dictionary = {}
-        for i in range(len(neighbours)):
-            temp = copy.deepcopy(self.graph)
-            bi_bfs = BidirectionalSearch(temp)
-            x = neighbours[i]
-            y = pos_y
-            path = bi_bfs.bidirectional_search(x, y)
-            path_dictionary[neighbours[i]] = path
-        return path_dictionary
 
     def select_node(self, belief_mat, dist_dict):
         # Maximum probability of finding a predator
@@ -222,78 +240,3 @@ class Agent6_1(Agent):
                 summation += (belief_mat[j] * transition_probabilities[j][i])
             new_belief_mat[i] = summation
         return new_belief_mat
-
-    # To know which neighbour is closer to the Agent and generating transition probabilities accordingly
-    def neighbours_order(self, node, dist_dict):
-        probabilities = {}
-        if len(self.graph[node]) == 2:
-            a = self.graph[node][0]
-            b = self.graph[node][1]
-            a_dist_from_agent = dist_dict[a][self.currPos]
-            b_dist_from_agent = dist_dict[b][self.currPos]
-            if a_dist_from_agent > b_dist_from_agent:
-                probabilities[a] = 0.8
-                probabilities[b] = 0.2
-            elif a_dist_from_agent < b_dist_from_agent:
-                probabilities[a] = 0.2
-                probabilities[b] = 0.8
-            else:
-                probabilities[a] = 0.5
-                probabilities[b] = 0.5
-
-        else:
-            a = self.graph[node][0]
-            b = self.graph[node][1]
-            c = self.graph[node][2]
-            a_dist_from_agent = dist_dict[a][self.currPos]
-            b_dist_from_agent = dist_dict[b][self.currPos]
-            c_dist_from_agent = dist_dict[c][self.currPos]
-            if a_dist_from_agent < b_dist_from_agent:
-                if a_dist_from_agent < c_dist_from_agent:
-                    probabilities[a] = (0.4 / 3) + 0.6
-                    probabilities[b] = (0.4 / 3)
-                    probabilities[c] = (0.4 / 3)
-
-                elif a_dist_from_agent == c_dist_from_agent:
-                    probabilities[a] = (0.4 / 3) + 0.3
-                    probabilities[b] = (0.4 / 3)
-                    probabilities[c] = (0.4 / 3) + 0.3
-
-                else:
-                    probabilities[a] = (0.4 / 3)
-                    probabilities[b] = (0.4 / 3)
-                    probabilities[c] = (0.4 / 3) + 0.6
-
-            elif a_dist_from_agent > b_dist_from_agent:
-                if b_dist_from_agent < c_dist_from_agent:
-                    probabilities[a] = (0.4 / 3)
-                    probabilities[b] = (0.4 / 3) + 0.6
-                    probabilities[c] = (0.4 / 3)
-
-                elif b_dist_from_agent == c_dist_from_agent:
-                    probabilities[a] = (0.4 / 3)
-                    probabilities[b] = (0.4 / 3) + 0.3
-                    probabilities[c] = (0.4 / 3) + 0.3
-
-                else:
-                    probabilities[a] = (0.4 / 3)
-                    probabilities[b] = (0.4 / 3)
-                    probabilities[c] = (0.4 / 3) + 0.6
-
-            else:
-                if a_dist_from_agent > c_dist_from_agent:
-                    probabilities[a] = (0.4 / 3)
-                    probabilities[b] = (0.4 / 3)
-                    probabilities[c] = (0.4 / 3) + 0.6
-
-                elif a_dist_from_agent == c_dist_from_agent:
-                    probabilities[a] = (0.4 / 3) + 0.2
-                    probabilities[b] = (0.4 / 3) + 0.2
-                    probabilities[c] = (0.4 / 3) + 0.2
-
-                else:
-                    probabilities[a] = (0.4 / 3) + 0.3
-                    probabilities[b] = (0.4 / 3) + 0.3
-                    probabilities[c] = (0.4 / 3)
-
-        return probabilities

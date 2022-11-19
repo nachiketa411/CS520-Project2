@@ -8,8 +8,6 @@ from Agent3 import Agent3
 from Agent4_1 import Agent4_1
 from Agent5 import Agent5
 from Agent7 import Agent7
-from Agent7b import Agent7b
-from Agent7c import Agent7c
 
 from Constants import ENVIRONMENT_PATH, GRAPH_DIST_PATH
 from Graph import Graph
@@ -106,10 +104,8 @@ if __name__ == '__main__':
             # agent1 = Agent2_2(prey, graph_1)
             # agent1 = Agent3(prey, graph_1)
             # agent1 = Agent4_1(prey, graph_1)
-            agent1 = Agent5(prey, graph_1)
-            # agent1 = Agent7(prey, graph_1)
-            # agent1 = Agent7b(prey, graph_1)
-            # agent1 = Agent7c(prey, graph_1)
+            # agent1 = Agent5(prey, graph_1)
+            agent1 = Agent7(prey, graph_1)
             agent1.initialize(predator)
             predator.initialize(agent1)
 
@@ -122,16 +118,13 @@ if __name__ == '__main__':
 
             # for Agents: 2.2, 3
             # steps_taken = agent1.move_agent(transition_matrix)
-            #
+
             # for Agents: 5
-            steps_taken = agent1.move_agent(graph_distances)
+            # steps_taken = agent1.move_agent(graph_distances)
 
-            # for Agents: 7
-            # steps_taken = agent1.move_agent(graph_distances, transition_matrix)
-
-            # # for Agents: 7
-            # steps_taken = agent1.move_agent(graph_distances, transition_matrix)
-
+            # for Agents: 5
+            print("Main me: ",transition_matrix)
+            steps_taken = agent1.move_agent(graph_distances, transition_matrix)
             if steps_taken[1] == 1:
                 successRate += 1
             if steps_taken[1] == 0:
