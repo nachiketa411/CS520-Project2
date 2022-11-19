@@ -104,23 +104,23 @@ def main():
     failure_rate_1 = 0
     failure_rate_2 = 0
 
-    # # ---------------------Write to JSON-------------------
-    # graphs = {}
-    # graph_distance = {}
-    # for k in range(100):
-    #     graph = Graph()
-    #     graphs[k] = graph.graph
-    #     graph_distance[k] = graph.distance_from_each_node
+    # # # ---------------------Write to JSON-------------------
+    # # graphs = {}
+    # # graph_distance = {}
+    # # for k in range(100):
+    # #     graph = Graph()
+    # #     graphs[k] = graph.graph
+    # #     graph_distance[k] = graph.distance_from_each_node
+    # #
+    # # json_object = json.dumps(graphs, indent=4)
+    # # json_object_2 = json.dumps(graph_distance, indent=4)
+    # # with open(ENVIRONMENT_PATH, "w") as outfile:
+    # #     outfile.write(json_object)
+    # #
+    # # with open(GRAPH_DIST_PATH, "w") as outfile2:
+    # #     outfile2.write(json_object_2)
+    # # # ----------------------------------------------------
     #
-    # json_object = json.dumps(graphs, indent=4)
-    # json_object_2 = json.dumps(graph_distance, indent=4)
-    # with open(ENVIRONMENT_PATH, "w") as outfile:
-    #     outfile.write(json_object)
-    #
-    # with open(GRAPH_DIST_PATH, "w") as outfile2:
-    #     outfile2.write(json_object_2)
-    # # ----------------------------------------------------
-
     # ---------------------Read from JSON-------------------
     with open(ENVIRONMENT_PATH, "r") as env_file:
         json_object = json.load(env_file)

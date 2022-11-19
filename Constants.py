@@ -15,5 +15,5 @@ PROB_OF_DISTRACTED_PREDATOR = 0.4
 # Need to use relative paths instead of Absolute
 # ENVIRONMENT_PATH = "C:\\Users\\rutvi\\PycharmProjects\\CS520-Project2\\ENV\\Environment.json"
 # GRAPH_DIST_PATH = "C:\\Users\\rutvi\\PycharmProjects\\CS520-Project2\\ENV\\Node Distances.json"
-ENVIRONMENT_PATH = "C:\\Studies and Work\\Rutgers\\Semester 1\\CS-520\\Projects\\Project 2\\ENV\\Environment.json"
-GRAPH_DIST_PATH = "C:\\Studies and Work\\Rutgers\\Semester 1\\CS-520\\Projects\\Project 2\\ENV\\Node Distances.json"
+ENVIRONMENT_PATH = "Environment.json"
+GRAPH_DIST_PATH = "Node Distances.json"
