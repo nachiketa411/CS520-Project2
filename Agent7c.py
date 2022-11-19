@@ -8,34 +8,41 @@ from Prey import Prey
 from BiBFS import BidirectionalSearch
 
 
-class Agent5(Agent):
+class Agent7c(Agent):
 
-    def move_agent(self, dist_dict):
+    def move_agent(self, dist_dict, transition_mat):
         # Return 1 for Success, -1 when predator catches the Agent and 0 when counter exhausts
-
-        belief_mat = [0] * NO_OF_NODES
-        belief_mat[self.predator.currPos] = 1
+        belief_mat_predator = [0] * NO_OF_NODES
+        belief_mat_prey = [1 / 49] * NO_OF_NODES
+        belief_mat_predator[self.predator.currPos] = 1
+        belief_mat_prey[self.currPos] = 0
 
         count = 0
 
         while count <= NO_OF_STEPS_1:
 
             print(count)
-            # Selecting a node to survey.
-            to_survey = self.select_node(belief_mat, dist_dict)
+            # Check if Agent knows where the predator is:
+            if 1 in belief_mat_predator:
+                # Choose a node to survey for the prey
+                to_survey = self.select_node_prey(belief_mat_prey)
+                belief_mat_prey = self.update_belief_after_survey(belief_mat_prey, to_survey, self.prey.currPos)
+            else:
+                # Choose a node to survey to find the predator
+                to_survey = self.select_node_predator(belief_mat_predator, dist_dict)
+                belief_mat_predator = self.update_belief_after_survey(belief_mat_predator, to_survey, self.prey.currPos)
 
-            # Survey the selected Node and update the belief matrix
-            belief_mat = self.update_belief(belief_mat, to_survey)
-
-
-            print("After Survey:", sum(belief_mat))
+            print("After Survey:", sum(belief_mat_predator), sum(belief_mat_prey))
 
             # Selecting a node with the highest probability and moving towards it.
-            predicted_pred_pos = self.select_node(belief_mat, dist_dict)
-            next_move = self.get_next_move(predicted_pred_pos)
+            predicted_pred_pos = self.select_node_predator(belief_mat_predator, dist_dict)
+            predicted_prey_pos = self.select_node_prey(belief_mat_prey)
+
+            next_move = self.get_next_move(predicted_pred_pos, predicted_prey_pos)
 
             # When Agent Chooses to stay in its position
             if next_move == -1:
+
                 self.prey.take_next_move(copy.deepcopy(self.graph))
 
                 # What if prey accidentally ends up in the Agent's location?
@@ -43,20 +50,21 @@ class Agent5(Agent):
                     count += 1
                     print("Yippiieeee")
                     return [count, 1]
-                print("Agent Chose to not move: ", sum(belief_mat))
+                belief_mat_prey = self.update_belief_using_transition_mat(belief_mat_prey, transition_mat)
 
-                # Predator moves closer to prey with a probability of 0.6
-                decision=random.uniform(0,1)
-                if decision<0.6:
+                # Predator moves closer to Agent with a probability of 0.6
+                decision = random.uniform(0, 1)
+                if decision < 0.6:
                     self.predator.take_next_move()
                 else:
-                    self.predator.currPos=random.choice(self.graph[self.predator.currPos])
+                    self.predator.currPos = random.choice(self.graph[self.predator.currPos])
                     self.predator.path.append(self.predator.currPos)
-                belief_mat = self.update_belief_using_transition_mat(belief_mat, dist_dict)
+                belief_mat_predator = self.update_belief_using_distance_dic(belief_mat_predator, dist_dict)
                 if self.currPos == self.predator.currPos:
                     print("Ded")
                     return [count, -1]
 
+                print("After Agent chose to not move", sum(belief_mat_predator), sum(belief_mat_prey))
                 count += 1
                 continue
 
@@ -75,8 +83,10 @@ class Agent5(Agent):
                 count += 1
                 return [count, -1]
 
-            belief_mat = self.update_belief(belief_mat, next_move)
-            print("After Survey: ", sum(belief_mat))
+            belief_mat_prey = self.update_belief_after_agent_moves(belief_mat_prey, next_move, self.prey.currPos)
+            belief_mat_predator = self.update_belief_after_agent_moves(belief_mat_predator, next_move, self.predator.currPos)
+
+            print("After Agent moves: ", sum(belief_mat_predator), sum(belief_mat_prey))
 
             self.prey.take_next_move(copy.deepcopy(self.graph))
             if self.currPos == self.prey.currPos:
@@ -97,22 +107,23 @@ class Agent5(Agent):
                 count += 1
                 return [count, -1]
 
-            belief_mat = self.update_belief_using_transition_mat(belief_mat, dist_dict)
-            print("After predator moved", sum(belief_mat))
+            belief_mat_prey = self.update_belief_using_transition_mat(belief_mat_prey, transition_mat)
+            belief_mat_predator = self.update_belief_using_distance_dic(belief_mat_predator, dist_dict)
+            print("After prey and predator moved", sum(belief_mat_predator), sum(belief_mat_prey))
 
             count += 1
         return [count, 0]
 
-    def get_next_move(self, pred_pos):
+    def get_next_move(self, pred_pos, prey_pos):
         neighbours = self.graph[self.currPos]
         # To find the distance between neighbours of Agent and Predator
         path_predator = self.find_path(neighbours, pred_pos)
         # To find the distance between neighbours of Agent and Prey
-        path_prey = self.find_path(neighbours, self.prey.currPos)
+        path_prey = self.find_path(neighbours, prey_pos)
 
         # Current Position to Predator/Prey
         currpos_to_predator = self.find_path([self.currPos], pred_pos)[self.currPos]
-        currpos_to_prey = self.find_path([self.currPos], self.prey.currPos)[self.currPos]
+        currpos_to_prey = self.find_path([self.currPos], prey_pos)[self.currPos]
 
         # The distance between each neighbour of agent and prey/predator
         len_agent_predator = {key: len(value) for key, value in path_predator.items()}
@@ -183,7 +194,7 @@ class Agent5(Agent):
             path_dictionary[neighbours[i]] = path
         return path_dictionary
 
-    def select_node(self, belief_mat, dist_dict):
+    def select_node_predator(self, belief_mat, dist_dict):
         # Maximum probability of finding a predator
         max_in_belief_mat = max(belief_mat)
         possible_nodes = []
@@ -204,9 +215,36 @@ class Agent5(Agent):
         else:
             return possible_nodes[0]
 
-    def update_belief(self, belief_mat, node):
-        if node == self.predator.currPos:
-            belief_mat = [0] * 50
+    def select_node_prey(self, belief_mat):
+        max_in_belief_mat = max(belief_mat)
+        possible_nodes = []
+        # print("Inside ",belief_mat,self.currPos,max_in_belief_mat)
+        for i in range(len(belief_mat)):
+            if belief_mat[i] == max_in_belief_mat:
+                possible_nodes.append(i)
+        if possible_nodes:
+            return random.choice(possible_nodes)
+        else:
+            print("Bhayankar Error")
+            return -1
+
+    def update_belief_after_survey(self, belief_mat, node, player):
+        if node == player:
+            decision=random.uniform(0,1)
+            if decision>0.1:
+                belief_mat = [0] * 50
+                belief_mat[node] = 1
+                return belief_mat
+        temp =  1 - belief_mat[node]
+        belief_mat[node] = 0
+        for i in range(len(belief_mat)):
+            belief_mat[i] = (belief_mat[i] / temp)*0.9
+        belief_mat[node] = 0.1
+        return belief_mat
+
+    def update_belief_after_agent_moves(self, belief_mat, node, player):
+        if node == player:
+            belief_mat = [0] * NO_OF_NODES
             belief_mat[node] = 1
         else:
             temp = 1 - belief_mat[node]
@@ -215,7 +253,20 @@ class Agent5(Agent):
                 belief_mat[i] = belief_mat[i] / temp
         return belief_mat
 
-    def update_belief_using_transition_mat(self, belief_mat, dist_dict):
+    def update_belief_using_transition_mat(self, belief_mat, transition_mat):
+        new_belief_mat = [0] * NO_OF_NODES
+        for i in range(len(belief_mat)):
+            # P(Prey in i)= Summation(P(Prey in neighbour of i)*P(Prey in neighbour of i|Prey in i))
+            summation = 0
+            for j in range(len(transition_mat[i])):
+                summation += (belief_mat[j] * transition_mat[j][i])
+            new_belief_mat[i] = summation
+        # print(transition_mat)
+        # print(belief_mat)
+        # print(new_belief_mat)
+        return new_belief_mat
+
+    def update_belief_using_distance_dic(self, belief_mat, dist_dict):
         new_belief_mat = [0] * NO_OF_NODES
 
         # Transition probabilities of each node based on the current position of Agent
@@ -229,7 +280,6 @@ class Agent5(Agent):
                 summation += (belief_mat[j] * transition_probabilities[j][i])
             new_belief_mat[i] = summation
         return new_belief_mat
-
 
     # To know which neighbour is closer to the Agent and generating transition probabilities accordingly
     def neighbours_order(self, node, dist_dict):
@@ -248,6 +298,7 @@ class Agent5(Agent):
             else:
                 probabilities[a] = 0.5
                 probabilities[b] = 0.5
+
         else:
             a = self.graph[node][0]
             b = self.graph[node][1]
