@@ -129,15 +129,16 @@ class Agent8b(Agent):
         currpos_to_prey = self.find_path([self.currPos], prey_pos)[self.currPos]
 
         # The distance between each neighbour of agent and prey/predator
-        # len_agent_predator = {key: len(value) for key, value in path_predator.items()}
-        # len_agent_prey = {key: len(value) for key, value in path_prey.items()}
+        len_agent_predator = {key: len(value) for key, value in path_predator.items()}
+        len_agent_prey = {key: len(value) for key, value in path_prey.items()}
 
         # Logic for Agent 1
 
         best_neighbour = []
         # Neighbors that are closer to the Prey and farther from the Predator.
         for i in neighbours:
-            if expected_distance_for_prey[i] < len(currpos_to_prey) and (expected_distance_for_predator[i] > len(currpos_to_predator)):
+            if (expected_distance_for_prey[i] < len(currpos_to_prey) and (len_agent_predator[i] > len(currpos_to_predator))) or \
+                    (len_agent_prey[i] < len(currpos_to_prey) and (expected_distance_for_predator[i] > len(currpos_to_predator))):
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -145,7 +146,8 @@ class Agent8b(Agent):
 
         # Neighbors that are closer to the Prey and not closer to the Predator.
         for i in neighbours:
-            if expected_distance_for_prey[i] < len(currpos_to_prey) and (expected_distance_for_predator[i] == len(currpos_to_predator)):
+            if (expected_distance_for_prey[i] < len(currpos_to_prey) and (len_agent_predator[i] == len(currpos_to_predator))) or \
+                    (len_agent_prey[i] < len(currpos_to_prey) and (expected_distance_for_predator[i] == len(currpos_to_predator))):
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -153,7 +155,8 @@ class Agent8b(Agent):
 
         # Neighbors that are not farther from the Prey and farther from the Predator.
         for i in neighbours:
-            if expected_distance_for_prey[i] == len(currpos_to_prey) and (expected_distance_for_predator[i] > len(currpos_to_predator)):
+            if (expected_distance_for_prey[i] == len(currpos_to_prey) and (len_agent_predator[i] > len(currpos_to_predator))) or \
+                    (len_agent_prey[i] == len(currpos_to_prey) and (expected_distance_for_predator[i] > len(currpos_to_predator))):
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -161,7 +164,8 @@ class Agent8b(Agent):
 
         # Neighbors that are not farther from the Prey and not closer to the Predator.
         for i in neighbours:
-            if expected_distance_for_prey[i] == len(currpos_to_prey) and (expected_distance_for_predator[i] == len(currpos_to_predator)):
+            if (expected_distance_for_prey[i] == len(currpos_to_prey) and (len_agent_predator[i] == len(currpos_to_predator))) or \
+                    (len_agent_prey[i] == len(currpos_to_prey) and (expected_distance_for_predator[i] == len(currpos_to_predator))):
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -169,7 +173,7 @@ class Agent8b(Agent):
 
         # Neighbors that are farther from the Predator.
         for i in neighbours:
-            if expected_distance_for_predator[i] > len(currpos_to_predator):
+            if (expected_distance_for_predator[i] > len(currpos_to_predator)) or (len_agent_predator[i] > len(currpos_to_predator)):
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -177,7 +181,7 @@ class Agent8b(Agent):
 
         # Neighbors that are not closer to the Predator.
         for i in neighbours:
-            if expected_distance_for_predator[i] == len(currpos_to_predator):
+            if (expected_distance_for_predator[i] == len(currpos_to_predator)) or (len_agent_predator[i] == len(currpos_to_predator)):
                 best_neighbour.append(i)
 
         if best_neighbour:
