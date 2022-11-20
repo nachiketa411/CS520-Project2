@@ -142,8 +142,13 @@ def main():
     all_possible_graph_combs = [(converted_graph[k], converted_distances[k]) for (k, i) in all_possible_combinations]
     with Pool(cpu_count() -1) as p:
         stats = p.map(simulate_agent, all_possible_graph_combs)
+
+    total_sum_of_steps = 0
+    for i in range(len(stats)):
+        total_sum_of_steps += stats[i][0]
+    avg_steps_taken = total_sum_of_steps / len(stats)
+    print('Average Number of Steps taken: ', avg_steps_taken)
     stats = np.array(stats)
-    print('Stats: ', stats)
     print("Final Success Rate: ", len(np.where(stats == 1)[0]))
     print("Marr Gaya Mai: ", len(np.where(stats == -1)[0]))
     print("Ghoom Gaya Mai: ", len(np.where(stats == 0)[0]))
