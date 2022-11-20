@@ -18,14 +18,11 @@ class Agent4_1(Agent):
 
         while count <= NO_OF_STEPS_4:
 
-            # print(count)
             # Selecting a node to survey.
             to_survey = self.select_node(belief_mat)
 
             # Survey the selected Node and update the belief matrix
             belief_mat = self.update_belief(belief_mat, to_survey)
-
-            # print("After Survey:", belief_mat, sum(belief_mat))
 
             # Selecting a node with the highest probability and moving towards it.
             to_move = self.select_node(belief_mat)
@@ -46,7 +43,6 @@ class Agent4_1(Agent):
                     return [count, 1]
 
                 belief_mat = self.update_belief_using_transition_mat(belief_mat, trans_mat)
-                # print("Agent Chose to not move: ", sum(belief_mat))
 
                 self.predator.take_next_move()
                 if self.currPos == self.predator.currPos:
@@ -61,7 +57,6 @@ class Agent4_1(Agent):
 
             # Check if prey is where you moved.
             belief_mat = self.update_belief(belief_mat, next_move)
-            # print("After Agent moved to ", next_move, belief_mat, sum(belief_mat))
 
             # Checks if Prey is in current position
             if belief_mat[next_move] == 1:
@@ -69,7 +64,6 @@ class Agent4_1(Agent):
                 count += 1
                 return [count, 1]
 
-            # print("Inside Agent",self.graph)
             self.prey.take_next_move(copy.deepcopy(self.graph))
             self.predator.take_next_move()
 
@@ -83,7 +77,6 @@ class Agent4_1(Agent):
                 return [count, -1]
 
             belief_mat = self.update_belief_using_transition_mat(belief_mat, trans_mat)
-            # print("After prey moved", belief_mat, sum(belief_mat))
 
             count += 1
         return [count, 0]
@@ -95,17 +88,9 @@ class Agent4_1(Agent):
         # To find the distance between neighbours of Agent and Prey
         path_prey = self.find_path(neighbours, to_survey_prey)
 
-        # print("----Neighbours Path-----")
-        # print("Prey",path_prey)
-        # print("Predator",path_predator)
-
         # Current Position to Predator/Prey
         currpos_to_predator = self.find_path([self.currPos], self.predator.currPos)[self.currPos]
         currpos_to_prey = self.find_path([self.currPos], to_survey_prey)[self.currPos]
-
-        # print("-----Current Position Path-----")
-        # print("Prey",currpos_to_prey)
-        # print("Predator",currpos_to_predator)
 
         # The distance between each neighbour of agent and prey/predator
         len_agent_predator = {key: len(value) for key, value in path_predator.items()}
@@ -169,14 +154,12 @@ class Agent4_1(Agent):
     def select_node(self, belief_mat):
         max_in_belief_mat = max(belief_mat)
         possible_nodes = []
-        # print("Inside ",belief_mat,self.currPos,max_in_belief_mat)
         for i in range(len(belief_mat)):
             if belief_mat[i] == max_in_belief_mat:
                 possible_nodes.append(i)
         if possible_nodes:
             return random.choice(possible_nodes)
         else:
-            # print("Bhayankar Error")
             return -1
 
     def update_belief(self, belief_mat, node):

@@ -18,7 +18,6 @@ class Agent8(Agent):
         count = 0
 
         while count <= NO_OF_STEPS_4:
-            # print(count)
             # Check if Agent knows where the predator is:
             if 1 in belief_mat_predator:
                 # Choose a node to survey for the prey
@@ -28,8 +27,6 @@ class Agent8(Agent):
                 # Choose a node to survey to find the predator
                 to_survey = self.select_node_predator(belief_mat_predator, dist_dict)
                 belief_mat_predator = self.update_belief_predator(belief_mat_predator, to_survey)
-
-            # print("After Survey:", sum(belief_mat_predator), sum(belief_mat_prey))
 
             # Selecting a node with the highest probability and moving towards it.
             predicted_pred_pos = self.select_node_predator(belief_mat_predator, dist_dict)
@@ -65,7 +62,6 @@ class Agent8(Agent):
                     print("Ded")
                     return [count, -1]
 
-                # print("After Agent chose to not move", sum(belief_mat_predator), sum(belief_mat_prey))
                 count += 1
                 continue
 
@@ -86,8 +82,6 @@ class Agent8(Agent):
 
             belief_mat_prey = self.update_belief_prey(belief_mat_prey, next_move)
             belief_mat_predator = self.update_belief_predator(belief_mat_predator, next_move)
-
-            # print("After Agent moves: ", sum(belief_mat_predator), sum(belief_mat_prey))
 
             self.prey.take_next_move(copy.deepcopy(self.graph))
             if self.currPos == self.prey.currPos:
@@ -111,7 +105,6 @@ class Agent8(Agent):
             belief_mat_prey = self.update_belief_using_transition_mat(belief_mat_prey, transition_mat)
             # belief_mat_predator = self.update_belief_using_distance_dic(belief_mat_predator, dist_dict)
             belief_mat_predator = self.update_belief_after_distracted_predator_moves(belief_mat_predator, self.currPos)
-            # print("After prey and predator moved", sum(belief_mat_predator), sum(belief_mat_prey))
 
             count += 1
         return [count, 0]
@@ -126,10 +119,6 @@ class Agent8(Agent):
         # Current Position to Predator/Prey
         currpos_to_predator = self.find_path([self.currPos], pred_pos)[self.currPos]
         currpos_to_prey = self.find_path([self.currPos], prey_pos)[self.currPos]
-
-        # The distance between each neighbour of agent and prey/predator
-        len_agent_predator = {key: len(value) for key, value in path_predator.items()}
-        len_agent_prey = {key: len(value) for key, value in path_prey.items()}
 
         # Logic for Agent 1
 

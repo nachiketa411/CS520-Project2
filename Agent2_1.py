@@ -50,28 +50,21 @@ class Agent2_1(Agent):
                 print("Ded")
                 count += 1
                 return [count, -1]
-            # print("Inside Agent",self.graph)
             self.prey.take_next_move(copy.deepcopy(self.graph))
             belief_mat = [0] * NO_OF_NODES
             belief_mat[self.prey.currPos] = 1
 
             if self.currPos == self.prey.currPos:
-                # print("Yippiieeee")
+                print("Yippiieeee")
                 count += 1
                 return [count, 1]
 
             self.predator.take_next_move()
 
             if self.currPos == self.predator.currPos:
-                # print("Ded")
+                print("Ded")
                 count += 1
                 return [count, -1]
-
-            # print("For count = ", count, "###################")
-            # print("Agent: ", self.currPos)
-            # print("Prey: ", self.prey.currPos)
-            # print("Predator", self.predator.currPos)
-
 
             count += 1
         return [count, 0]
@@ -90,13 +83,11 @@ class Agent2_1(Agent):
 
         # The distance between each neighbour of agent and prey/predator
         len_agent_predator = {key: len(value) for key, value in path_predator.items()}
-        len_agent_prey = {key: len(value) for key, value in path_prey.items()}
 
         # Logic for Agent 1
         best_neighbour = []
         # Neighbors that are closer to the Prey and farther from the Predator.
         for i in neighbours:
-            # if len_agent_prey[i] < len(currpos_to_prey) and (len_agent_predator[i] > len(currpos_to_predator)):
             if expected_distance[i] < len(currpos_to_prey) and (len_agent_predator[i] > len(currpos_to_predator)):
                 best_neighbour.append(i)
 
@@ -146,12 +137,5 @@ class Agent2_1(Agent):
         # Sit still and pray.
         return -1
 
-
-    # def reverse_dict(self, mydict):
-    #     reversed_dict = {}
-    #     for key, value in mydict.items():
-    #         reversed_dict.setdefault(value, [])
-    #         reversed_dict[value].append(key)
-    #     return reversed_dict
 
 

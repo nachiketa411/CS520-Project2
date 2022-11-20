@@ -43,7 +43,6 @@ class Agent(ABC):
                                                  curr_pos_of_agent, curr_pos_of_prey, graph_distances):
 
         no_of_next_steps = NO_OF_NEXT_STEP_PREDICTIONS_FOR_AGENT_2
-        # print('Transition Matrix: ', transition_matrix)
 
         expected_distance = {}
         neighbours_of_agent = self.graph[curr_pos_of_agent]
@@ -57,9 +56,6 @@ class Agent(ABC):
             np_2d_transition_matrix = np.array(transition_matrix)
             np_belief = np_belief @ np_2d_transition_matrix
             belief_mat = list(np_belief)
-
-        # print('Belief Matrix: ', belief_mat)
-        # print('Total Sum of Belief: ', sum(belief_mat))
 
         top_3 = list(zip(*heapq.nlargest(3, enumerate(belief_mat), key=operator.itemgetter(1))))[0]
         new_belief_mat = [0] * len(belief_mat)

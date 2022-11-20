@@ -20,14 +20,11 @@ class Agent5(Agent):
 
         while count <= NO_OF_STEPS_4:
 
-            # print(count)
             # Selecting a node to survey.
             to_survey = self.select_node(belief_mat, dist_dict)
 
             # Survey the selected Node and update the belief matrix
             belief_mat = self.update_belief(belief_mat, to_survey)
-
-            # print("After Survey:", sum(belief_mat))
 
             # Selecting a node with the highest probability and moving towards it.
             predicted_pred_pos = self.select_node(belief_mat, dist_dict)
@@ -42,8 +39,6 @@ class Agent5(Agent):
                     count += 1
                     print("Yippiieeee")
                     return [count, 1]
-                # print("Agent Chose to not move: ", sum(belief_mat))
-
                 # Predator moves closer to prey with a probability of 0.6
                 decision=random.uniform(0,1)
                 if decision < (1 - PROB_OF_DISTRACTED_PREDATOR):
@@ -53,7 +48,6 @@ class Agent5(Agent):
                     self.predator.path.append(self.predator.currPos)
                 belief_mat = self.update_belief_using_transition_mat(belief_mat, dist_dict)
                 # belief_mat = self.update_belief_after_distracted_predator_moves(belief_mat, self.currPos)
-                # print('Belief: ', belief_mat)
                 if self.currPos == self.predator.currPos:
                     print("Ded")
                     return [count, -1]
@@ -77,7 +71,6 @@ class Agent5(Agent):
                 return [count, -1]
 
             belief_mat = self.update_belief(belief_mat, next_move)
-            # print("After Survey: ", sum(belief_mat))
 
             self.prey.take_next_move(copy.deepcopy(self.graph))
             if self.currPos == self.prey.currPos:
@@ -100,8 +93,6 @@ class Agent5(Agent):
 
             belief_mat = self.update_belief_using_transition_mat(belief_mat, dist_dict)
             # belief_mat = self.update_belief_after_distracted_predator_moves(belief_mat, self.currPos)
-            # print('Belief: ', belief_mat)
-            # print("After prey moved", sum(belief_mat))
 
             count += 1
         return [count, 0]
