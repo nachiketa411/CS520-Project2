@@ -55,8 +55,8 @@ def simulate_agent(args):
     # agent1 = Agent3(prey, graph_1)
     # agent1 = Agent4_1(prey, graph_1)
     # agent1 = Agent5(prey, graph_1)
-    agent1 = Agent6_1(prey, graph_1)
-    # agent1 = Agent7(prey, graph_1)
+    # agent1 = Agent6_1(prey, graph_1)
+    agent1 = Agent7(prey, graph_1)
     # agent1 = Agent7b(prey, graph_1)
     # agent1 = Agent7c(prey, graph_1)
     # agent1 = Agent8(prey, graph_1)
@@ -78,10 +78,10 @@ def simulate_agent(args):
     # steps_taken = agent1.move_agent(transition_matrix)
 
     # for Agents: 5, 6
-    steps_taken = agent1.move_agent(graph_distances)
+    # steps_taken = agent1.move_agent(graph_distances)
 
     # for Agent 7, 8 full
-    # steps_taken = agent1.move_agent(graph_distances, transition_matrix)
+    steps_taken = agent1.move_agent(graph_distances, transition_matrix)
 
     del graph_1
 
