@@ -18,9 +18,6 @@ class Agent8(Agent):
         count = 0
 
         while count <= NO_OF_STEPS_4:
-
-            print('Prey Belief Sum: ', sum(belief_mat_prey))
-            print('Predator Belief Sum: ', sum(belief_mat_predator))
             # print(count)
             # Check if Agent knows where the predator is:
             if 1 in belief_mat_predator:
