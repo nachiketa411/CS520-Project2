@@ -20,19 +20,21 @@ class Agent8c(Agent):
         count = 0
 
         while count <= NO_OF_STEPS_4:
-            if 1 in belief_mat_prey:
-                self.counter_for_prey_actually_found = self.counter_for_prey_actually_found + 1
-
             # Check if Agent knows where the predator is:
             if 1 in belief_mat_predator:
                 # Choose a node to survey for the prey
                 to_survey = self.select_node_prey(belief_mat_prey)
                 belief_mat_prey = self.update_belief_after_survey(belief_mat_prey, to_survey, self.prey.currPos)
-                self.counter_for_predator_actually_found = self.counter_for_predator_actually_found + 1
             else:
                 # Choose a node to survey to find the predator
                 to_survey = self.select_node_predator(belief_mat_predator, dist_dict)
                 belief_mat_predator = self.update_belief_after_survey(belief_mat_predator, to_survey, self.predator.currPos)
+
+            if 1 in belief_mat_prey:
+                self.counter_for_prey_actually_found = self.counter_for_prey_actually_found + 1
+
+            if 1 in belief_mat_predator:
+                self.counter_for_predator_actually_found = self.counter_for_predator_actually_found + 1
 
             # Selecting a node with the highest probability and moving towards it.
             predicted_pred_pos = self.select_node_predator(belief_mat_predator, dist_dict)

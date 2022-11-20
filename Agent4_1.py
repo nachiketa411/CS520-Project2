@@ -17,14 +17,14 @@ class Agent4_1(Agent):
         count = 0
 
         while count <= NO_OF_STEPS_4:
-            if 1 in belief_mat:
-                self.counter_for_prey_actually_found = self.counter_for_prey_actually_found + 1
-
             # Selecting a node to survey.
             to_survey = self.select_node(belief_mat)
 
             # Survey the selected Node and update the belief matrix
             belief_mat = self.update_belief(belief_mat, to_survey)
+
+            if 1 in belief_mat:
+                self.counter_for_prey_actually_found = self.counter_for_prey_actually_found + 1
 
             # Selecting a node with the highest probability and moving towards it.
             to_move = self.select_node(belief_mat)
