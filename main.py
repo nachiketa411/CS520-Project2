@@ -15,6 +15,8 @@ from Agent6_1 import Agent6_1
 from Agent7 import Agent7
 from Agent7b import Agent7b
 from Agent7c import Agent7c
+from Agent8b import Agent8b
+from Agent8c import Agent8c
 from Agent9 import Agent9
 from Agent8 import Agent8
 
@@ -55,7 +57,12 @@ def simulate_agent(args):
     # agent1 = Agent5(prey, graph_1)
     # agent1 = Agent6_1(prey, graph_1)
     # agent1 = Agent7(prey, graph_1)
-    agent1 = Agent8(prey, graph_1)
+    agent1 = Agent7b(prey, graph_1)
+    # agent1 = Agent7c(prey, graph_1)
+    # agent1 = Agent8(prey, graph_1)
+    # agent1 = Agent8b(prey, graph_1)
+    # agent1 = Agent8c(prey, graph_1)
+    # agent1 = Agent9(prey, graph_1)
 
     agent1.initialize(predator)
     predator.initialize(agent1)
@@ -73,7 +80,7 @@ def simulate_agent(args):
     # for Agents: 5, 6
     # steps_taken = agent1.move_agent(graph_distances)
 
-    # for Agent 7, 8
+    # for Agent 7, 8 full
     steps_taken = agent1.move_agent(graph_distances, transition_matrix)
 
     del graph_1

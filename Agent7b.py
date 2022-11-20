@@ -1,7 +1,7 @@
 import copy
 import random
 
-from Constants import NO_OF_STEPS_1, NO_OF_NODES
+from Constants import NO_OF_STEPS_1, NO_OF_NODES, NO_OF_STEPS_4
 from Agent import Agent
 from Predator import Predator
 from Prey import Prey
@@ -19,7 +19,7 @@ class Agent7b(Agent):
 
         count = 0
 
-        while count <= NO_OF_STEPS_1:
+        while count <= NO_OF_STEPS_4:
 
             print(count)
             # Check if Agent knows where the predator is:
@@ -31,8 +31,6 @@ class Agent7b(Agent):
                 # Choose a node to survey to find the predator
                 to_survey = self.select_node_predator(belief_mat_predator, dist_dict)
                 belief_mat_predator = self.update_belief_after_survey(belief_mat_predator, to_survey, self.predator.currPos)
-
-            print("After Survey:", sum(belief_mat_predator), sum(belief_mat_prey))
 
             # Selecting a node with the highest probability and moving towards it.
             predicted_pred_pos = self.select_node_predator(belief_mat_predator, dist_dict)
@@ -59,12 +57,13 @@ class Agent7b(Agent):
                 else:
                     self.predator.currPos = random.choice(self.graph[self.predator.currPos])
                     self.predator.path.append(self.predator.currPos)
-                belief_mat_predator = self.update_belief_using_distance_dic(belief_mat_predator, dist_dict)
+                # belief_mat_predator = self.update_belief_using_distance_dic(belief_mat_predator, dist_dict)
+                belief_mat_predator = self.update_belief_after_distracted_predator_moves(belief_mat_predator,
+                                                                                         self.currPos)
                 if self.currPos == self.predator.currPos:
                     print("Ded")
                     return [count, -1]
 
-                print("After Agent chose to not move", sum(belief_mat_predator), sum(belief_mat_prey))
                 count += 1
                 continue
 
@@ -86,8 +85,6 @@ class Agent7b(Agent):
             belief_mat_prey = self.update_belief_after_agent_moves(belief_mat_prey, next_move, self.prey.currPos)
             belief_mat_predator = self.update_belief_after_agent_moves(belief_mat_predator, next_move, self.predator.currPos)
 
-            print("After Agent moves: ", sum(belief_mat_predator), sum(belief_mat_prey))
-
             self.prey.take_next_move(copy.deepcopy(self.graph))
             if self.currPos == self.prey.currPos:
                 print("Yippiieeee")
@@ -108,8 +105,9 @@ class Agent7b(Agent):
                 return [count, -1]
 
             belief_mat_prey = self.update_belief_using_transition_mat(belief_mat_prey, transition_mat)
-            belief_mat_predator = self.update_belief_using_distance_dic(belief_mat_predator, dist_dict)
-            print("After prey and predator moved", sum(belief_mat_predator), sum(belief_mat_prey))
+            # belief_mat_predator = self.update_belief_using_distance_dic(belief_mat_predator, dist_dict)
+            belief_mat_predator = self.update_belief_after_distracted_predator_moves(belief_mat_predator,
+                                                                                     self.currPos)
 
             count += 1
         return [count, 0]
@@ -182,17 +180,6 @@ class Agent7b(Agent):
 
         # Sit still and pray.
         return -1
-
-    def find_path(self, neighbours, pos_y):
-        path_dictionary = {}
-        for i in range(len(neighbours)):
-            temp = copy.deepcopy(self.graph)
-            bi_bfs = BidirectionalSearch(temp)
-            x = neighbours[i]
-            y = pos_y
-            path = bi_bfs.bidirectional_search(x, y)
-            path_dictionary[neighbours[i]] = path
-        return path_dictionary
 
     def select_node_predator(self, belief_mat, dist_dict):
         # Maximum probability of finding a predator
@@ -280,77 +267,3 @@ class Agent7b(Agent):
             new_belief_mat[i] = summation
         return new_belief_mat
 
-    # To know which neighbour is closer to the Agent and generating transition probabilities accordingly
-    def neighbours_order(self, node, dist_dict):
-        probabilities = {}
-        if len(self.graph[node]) == 2:
-            a = self.graph[node][0]
-            b = self.graph[node][1]
-            a_dist_from_agent = dist_dict[a][self.currPos]
-            b_dist_from_agent = dist_dict[b][self.currPos]
-            if a_dist_from_agent > b_dist_from_agent:
-                probabilities[a] = 0.8
-                probabilities[b] = 0.2
-            elif a_dist_from_agent < b_dist_from_agent:
-                probabilities[a] = 0.2
-                probabilities[b] = 0.8
-            else:
-                probabilities[a] = 0.5
-                probabilities[b] = 0.5
-
-        else:
-            a = self.graph[node][0]
-            b = self.graph[node][1]
-            c = self.graph[node][2]
-            a_dist_from_agent = dist_dict[a][self.currPos]
-            b_dist_from_agent = dist_dict[b][self.currPos]
-            c_dist_from_agent = dist_dict[c][self.currPos]
-            if a_dist_from_agent < b_dist_from_agent:
-                if a_dist_from_agent < c_dist_from_agent:
-                    probabilities[a] = (0.4 / 3) + 0.6
-                    probabilities[b] = (0.4 / 3)
-                    probabilities[c] = (0.4 / 3)
-
-                elif a_dist_from_agent == c_dist_from_agent:
-                    probabilities[a] = (0.4 / 3) + 0.3
-                    probabilities[b] = (0.4 / 3)
-                    probabilities[c] = (0.4 / 3) + 0.3
-
-                else:
-                    probabilities[a] = (0.4 / 3)
-                    probabilities[b] = (0.4 / 3)
-                    probabilities[c] = (0.4 / 3) + 0.6
-
-            elif a_dist_from_agent > b_dist_from_agent:
-                if b_dist_from_agent < c_dist_from_agent:
-                    probabilities[a] = (0.4 / 3)
-                    probabilities[b] = (0.4 / 3) + 0.6
-                    probabilities[c] = (0.4 / 3)
-
-                elif b_dist_from_agent == c_dist_from_agent:
-                    probabilities[a] = (0.4 / 3)
-                    probabilities[b] = (0.4 / 3) + 0.3
-                    probabilities[c] = (0.4 / 3) + 0.3
-
-                else:
-                    probabilities[a] = (0.4 / 3)
-                    probabilities[b] = (0.4 / 3)
-                    probabilities[c] = (0.4 / 3) + 0.6
-
-            else:
-                if a_dist_from_agent > c_dist_from_agent:
-                    probabilities[a] = (0.4 / 3)
-                    probabilities[b] = (0.4 / 3)
-                    probabilities[c] = (0.4 / 3) + 0.6
-
-                elif a_dist_from_agent == c_dist_from_agent:
-                    probabilities[a] = (0.4 / 3) + 0.2
-                    probabilities[b] = (0.4 / 3) + 0.2
-                    probabilities[c] = (0.4 / 3) + 0.2
-
-                else:
-                    probabilities[a] = (0.4 / 3) + 0.3
-                    probabilities[b] = (0.4 / 3) + 0.3
-                    probabilities[c] = (0.4 / 3)
-
-        return probabilities

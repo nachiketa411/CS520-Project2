@@ -8,7 +8,7 @@ from Prey import Prey
 from BiBFS import BidirectionalSearch
 
 
-class Agent7c(Agent):
+class Agent8c(Agent):
 
     def move_agent(self, dist_dict, transition_mat):
         # Return 1 for Success, -1 when predator catches the Agent and 0 when counter exhausts
@@ -36,7 +36,13 @@ class Agent7c(Agent):
             predicted_pred_pos = self.select_node_predator(belief_mat_predator, dist_dict)
             predicted_prey_pos = self.select_node_prey(belief_mat_prey)
 
-            next_move = self.get_next_move(predicted_pred_pos, predicted_prey_pos)
+            expected_distance_for_prey = self.get_expected_distance_of_prey_from_agent(
+                belief_mat_prey.copy(), transition_mat.copy(), self.currPos, predicted_prey_pos, dist_dict)
+            expected_distance_for_predator = self.get_expected_distance_of_predator_from_agent(
+                belief_mat_predator.copy(), self.currPos, dist_dict)
+
+            next_move = self.get_next_move(
+                predicted_pred_pos, predicted_prey_pos, expected_distance_for_prey, expected_distance_for_predator)
 
             # When Agent Chooses to stay in its position
             if next_move == -1:
@@ -111,7 +117,7 @@ class Agent7c(Agent):
             count += 1
         return [count, 0]
 
-    def get_next_move(self, pred_pos, prey_pos):
+    def get_next_move(self, pred_pos, prey_pos, expected_distance_for_prey, expected_distance_for_predator):
         neighbours = self.graph[self.currPos]
         # To find the distance between neighbours of Agent and Predator
         path_predator = self.find_path(neighbours, pred_pos)
@@ -123,15 +129,15 @@ class Agent7c(Agent):
         currpos_to_prey = self.find_path([self.currPos], prey_pos)[self.currPos]
 
         # The distance between each neighbour of agent and prey/predator
-        len_agent_predator = {key: len(value) for key, value in path_predator.items()}
-        len_agent_prey = {key: len(value) for key, value in path_prey.items()}
+        # len_agent_predator = {key: len(value) for key, value in path_predator.items()}
+        # len_agent_prey = {key: len(value) for key, value in path_prey.items()}
 
         # Logic for Agent 1
 
         best_neighbour = []
         # Neighbors that are closer to the Prey and farther from the Predator.
         for i in neighbours:
-            if len_agent_prey[i] < len(currpos_to_prey) and (len_agent_predator[i] > len(currpos_to_predator)):
+            if expected_distance_for_prey[i] < len(currpos_to_prey) and (expected_distance_for_predator[i] > len(currpos_to_predator)):
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -139,7 +145,7 @@ class Agent7c(Agent):
 
         # Neighbors that are closer to the Prey and not closer to the Predator.
         for i in neighbours:
-            if len_agent_prey[i] < len(currpos_to_prey) and (len_agent_predator[i] == len(currpos_to_predator)):
+            if expected_distance_for_prey[i] < len(currpos_to_prey) and (expected_distance_for_predator[i] == len(currpos_to_predator)):
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -147,7 +153,7 @@ class Agent7c(Agent):
 
         # Neighbors that are not farther from the Prey and farther from the Predator.
         for i in neighbours:
-            if len_agent_prey[i] == len(currpos_to_prey) and (len_agent_predator[i] > len(currpos_to_predator)):
+            if expected_distance_for_prey[i] == len(currpos_to_prey) and (expected_distance_for_predator[i] > len(currpos_to_predator)):
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -155,7 +161,7 @@ class Agent7c(Agent):
 
         # Neighbors that are not farther from the Prey and not closer to the Predator.
         for i in neighbours:
-            if len_agent_prey[i] == len(currpos_to_prey) and (len_agent_predator[i] == len(currpos_to_predator)):
+            if expected_distance_for_prey[i] == len(currpos_to_prey) and (expected_distance_for_predator[i] == len(currpos_to_predator)):
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -163,7 +169,7 @@ class Agent7c(Agent):
 
         # Neighbors that are farther from the Predator.
         for i in neighbours:
-            if len_agent_predator[i] > len(currpos_to_predator):
+            if expected_distance_for_predator[i] > len(currpos_to_predator):
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -171,7 +177,7 @@ class Agent7c(Agent):
 
         # Neighbors that are not closer to the Predator.
         for i in neighbours:
-            if len_agent_predator[i] == len(currpos_to_predator):
+            if expected_distance_for_predator[i] == len(currpos_to_predator):
                 best_neighbour.append(i)
 
         if best_neighbour:
