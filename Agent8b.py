@@ -21,7 +21,6 @@ class Agent8b(Agent):
 
         while count <= NO_OF_STEPS_4:
 
-            print(count)
             # Check if Agent knows where the predator is:
             if 1 in belief_mat_predator:
                 # Choose a node to survey for the prey
@@ -218,7 +217,6 @@ class Agent8b(Agent):
         if possible_nodes:
             return random.choice(possible_nodes)
         else:
-            print("Bhayankar Error")
             return -1
 
     def update_belief_after_survey(self, belief_mat, node, player):
@@ -253,9 +251,6 @@ class Agent8b(Agent):
             for j in range(len(transition_mat[i])):
                 summation += (belief_mat[j] * transition_mat[j][i])
             new_belief_mat[i] = summation
-        # print(transition_mat)
-        # print(belief_mat)
-        # print(new_belief_mat)
         return new_belief_mat
 
     def update_belief_using_distance_dic(self, belief_mat, dist_dict):
