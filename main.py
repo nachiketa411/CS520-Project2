@@ -58,9 +58,9 @@ def simulate_agent(args):
     # agent1 = Agent6_1(prey, graph_1)
     # agent1 = Agent7(prey, graph_1)
     # agent1 = Agent7b(prey, graph_1)
-    agent1 = Agent7c(prey, graph_1)
+    # agent1 = Agent7c(prey, graph_1)
     # agent1 = Agent8(prey, graph_1)
-    # agent1 = Agent8b(prey, graph_1)
+    agent1 = Agent8b(prey, graph_1)
     # agent1 = Agent8c(prey, graph_1)
     # agent1 = Agent9(prey, graph_1)
 
