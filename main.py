@@ -72,7 +72,7 @@ def simulate_agent(args):
     # steps_taken = agent1.move_agent(transition_matrix)
 
     # for Agents: 5, 6
-    steps_taken = agent1.move_agent(graph_distances)
+    # steps_taken = agent1.move_agent(graph_distances)
 
     # for Agent 7, 8
     steps_taken = agent1.move_agent(graph_distances, transition_matrix)
