@@ -36,7 +36,8 @@ class Agent8(Agent):
             predicted_pred_pos = self.select_node_predator(belief_mat_predator, dist_dict)
             predicted_prey_pos = self.select_node_prey(belief_mat_prey)
 
-            expected_distance_for_prey = self.get_expected_distance_of_predator_from_agent(belief_mat_prey.copy(), self.currPos, dist_dict)
+            expected_distance_for_prey = self.get_expected_distance_of_prey_from_agent(belief_mat_prey.copy(), transition_mat.copy(),
+                                                                              self.currPos, predicted_prey_pos, dist_dict)
             expected_distance_for_predator = self.get_expected_distance_of_predator_from_agent(belief_mat_predator.copy(), self.currPos, dist_dict)
 
             next_move = self.get_next_move(predicted_pred_pos, predicted_prey_pos, expected_distance_for_prey, expected_distance_for_predator)
@@ -61,8 +62,7 @@ class Agent8(Agent):
                     self.predator.currPos = random.choice(self.graph[self.predator.currPos])
                     self.predator.path.append(self.predator.currPos)
                 # belief_mat_predator = self.update_belief_using_distance_dic(belief_mat_predator, dist_dict)
-                belief_mat_predator = self.update_belief_after_distracted_predator_moves(belief_mat_predator,
-                                                                                         self.currPos)
+                belief_mat_predator = self.update_belief_after_distracted_predator_moves(belief_mat_predator, self.currPos)
                 if self.currPos == self.predator.currPos:
                     print("Ded")
                     return [count, -1]

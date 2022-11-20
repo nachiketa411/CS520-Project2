@@ -111,8 +111,7 @@ class Agent7(Agent):
 
             belief_mat_prey = self.update_belief_using_transition_mat(belief_mat_prey, transition_mat)
             # belief_mat_predator = self.update_belief_using_distance_dic(belief_mat_predator, dist_dict)
-            belief_mat_predator = self.update_belief_after_distracted_predator_moves(belief_mat_predator,
-                                                                                     self.currPos)
+            belief_mat_predator = self.update_belief_after_distracted_predator_moves(belief_mat_predator, self.currPos)
             # print("After prey and predator moved", sum(belief_mat_predator), sum(belief_mat_prey))
 
             count += 1
