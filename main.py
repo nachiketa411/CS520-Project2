@@ -13,6 +13,7 @@ from Agent4_1 import Agent4_1
 from Agent5 import Agent5
 from Agent6_1 import Agent6_1
 from Agent7 import Agent7
+from Agent8 import Agent8
 
 from Constants import ENVIRONMENT_PATH, GRAPH_DIST_PATH
 from Graph import Graph
@@ -53,8 +54,10 @@ def simulate_agent(args):
     # agent1 = Agent3(prey, graph_1)
     # agent1 = Agent4_1(prey, graph_1)
     # agent1 = Agent5(prey, graph_1)
-    agent1 = Agent6_1(prey, graph_1)
-    # agent1 = Agent7(prey, graph_1)
+    # agent1 = Agent6_1(prey, graph_1)
+    agent1 = Agent7(prey, graph_1)
+    # agent1 = Agent8(prey, graph_1)
+
     agent1.initialize(predator)
     predator.initialize(agent1)
 
@@ -69,10 +72,14 @@ def simulate_agent(args):
     # steps_taken = agent1.move_agent(transition_matrix)
 
     # for Agents: 5, 6
+    steps_taken = agent1.move_agent(graph_distances)
+
+    # for Agent 7, 8
+    steps_taken = agent1.move_agent(graph_distances, transition_matrix)
 
     del graph_1
 
-    return agent1.move_agent(graph_distances)
+    return steps_taken
     #
     #
     #
