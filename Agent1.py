@@ -1,7 +1,7 @@
 import copy
 import random
 
-from Constants import NO_OF_STEPS_1
+from Constants import NO_OF_STEPS_1, NO_OF_STEPS_4
 from Agent import Agent
 from Predator import Predator
 from Prey import Prey
@@ -13,7 +13,7 @@ class Agent1(Agent):
     def move_agent(self):
         # Return 1 for Success, -1 when predator catches the Agent and 0 when counter exhausts
         count = 0
-        while count <= NO_OF_STEPS_1:
+        while count <= NO_OF_STEPS_4:
             next_move = self.get_next_move()
             if next_move == -1:
                 self.prey.take_next_move(copy.deepcopy(self.graph))
