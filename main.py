@@ -143,6 +143,7 @@ def main():
     with Pool(cpu_count() -1) as p:
         stats = p.map(simulate_agent, all_possible_graph_combs)
     stats = np.array(stats)
+    print('Stats: ', stats)
     print("Final Success Rate: ", len(np.where(stats == 1)[0]))
     print("Marr Gaya Mai: ", len(np.where(stats == -1)[0]))
     print("Ghoom Gaya Mai: ", len(np.where(stats == 0)[0]))
