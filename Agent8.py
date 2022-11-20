@@ -19,6 +19,8 @@ class Agent8(Agent):
 
         while count <= NO_OF_STEPS_4:
 
+            print('Prey Belief Sum: ', sum(belief_mat_prey))
+            print('Predator Belief Sum: ', sum(belief_mat_predator))
             # print(count)
             # Check if Agent knows where the predator is:
             if 1 in belief_mat_predator:
@@ -36,8 +38,7 @@ class Agent8(Agent):
             predicted_pred_pos = self.select_node_predator(belief_mat_predator, dist_dict)
             predicted_prey_pos = self.select_node_prey(belief_mat_prey)
 
-            expected_distance_for_prey = self.get_expected_distance_of_prey_from_agent(belief_mat_prey.copy(), transition_mat.copy(),
-                                                                              self.currPos, predicted_prey_pos, dist_dict)
+            expected_distance_for_prey = self.get_expected_distance_of_prey_from_agent(belief_mat_prey.copy(), transition_mat.copy(), self.currPos, predicted_prey_pos, dist_dict)
             expected_distance_for_predator = self.get_expected_distance_of_predator_from_agent(belief_mat_predator.copy(), self.currPos, dist_dict)
 
             next_move = self.get_next_move(predicted_pred_pos, predicted_prey_pos, expected_distance_for_prey, expected_distance_for_predator)
