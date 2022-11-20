@@ -7,7 +7,6 @@ from Predator import Predator
 from Prey import Prey
 from BiBFS import BidirectionalSearch
 
-
 class Agent9(Agent):
 
     def move_agent(self, dist_dict, transition_mat):
@@ -354,3 +353,4 @@ class Agent9(Agent):
                     probabilities[c] = (0.4 / 3)
 
         return probabilities
+

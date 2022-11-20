@@ -7,9 +7,6 @@ from Predator import Predator
 from Prey import Prey
 from BiBFS import BidirectionalSearch
 
-# Our Agent 2 simply prefers moving away from the Predator and going closer to Prey and only when that option is also
-# exhausted, does it think of keeping its distance equal to the Predator and think of other options.
-
 
 class Agent2_1(Agent):
 
@@ -50,7 +47,6 @@ class Agent2_1(Agent):
                 print("Ded")
                 count += 1
                 return [count, -1]
-            # print("Inside Agent",self.graph)
             self.prey.take_next_move(copy.deepcopy(self.graph))
             belief_mat = [0] * NO_OF_NODES
             belief_mat[self.prey.currPos] = 1
@@ -66,12 +62,6 @@ class Agent2_1(Agent):
                 print("Ded")
                 count += 1
                 return [count, -1]
-
-            # print("For count = ", count, "###################")
-            # print("Agent: ", self.currPos)
-            # print("Prey: ", self.prey.currPos)
-            # print("Predator", self.predator.currPos)
-
 
             count += 1
         return [count, 0]
@@ -90,17 +80,12 @@ class Agent2_1(Agent):
 
         # The distance between each neighbour of agent and prey/predator
         len_agent_predator = {key: len(value) for key, value in path_predator.items()}
-        len_agent_prey = {key: len(value) for key, value in path_prey.items()}
 
         # Logic for Agent 1
         best_neighbour = []
         # Neighbors that are closer to the Prey and farther from the Predator.
         for i in neighbours:
-            # if len_agent_prey[i] < len(currpos_to_prey) and (len_agent_predator[i] > len(currpos_to_predator)):
             if expected_distance[i] < len(currpos_to_prey) and (len_agent_predator[i] > len(currpos_to_predator)):
-                # print('1. Expected Neighbour[i]: ', expected_distance[i])
-                # print('Neighbour: ', i)
-                # print('Dist of Curr Pos to Prey: ', len(currpos_to_prey))
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -109,9 +94,6 @@ class Agent2_1(Agent):
         # Neighbors that are closer to the Prey and not closer to the Predator.
         for i in neighbours:
             if expected_distance[i] < len(currpos_to_prey) and (len_agent_predator[i] == len(currpos_to_predator)):
-                # print('2. Expected Neighbour[i]: ', expected_distance[i])
-                # print('Neighbour: ', i)
-                # print('Dist of Curr Pos to Prey: ', len(currpos_to_prey))
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -120,9 +102,6 @@ class Agent2_1(Agent):
         # Neighbors that are not farther from the Prey and farther from the Predator.
         for i in neighbours:
             if expected_distance[i] == len(currpos_to_prey) and (len_agent_predator[i] > len(currpos_to_predator)):
-                # print('3. Expected Neighbour[i]: ', expected_distance[i])
-                # print('Neighbour: ', i)
-                # print('Dist of Curr Pos to Prey: ', len(currpos_to_prey))
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -131,9 +110,6 @@ class Agent2_1(Agent):
         # Neighbors that are not farther from the Prey and not closer to the Predator.
         for i in neighbours:
             if expected_distance[i] == len(currpos_to_prey) and (len_agent_predator[i] == len(currpos_to_predator)):
-                # print('4. Expected Neighbour[i]: ', expected_distance[i])
-                # print('Neighbour: ', i)
-                # print('Dist of Curr Pos to Prey: ', len(currpos_to_prey))
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -157,13 +133,3 @@ class Agent2_1(Agent):
 
         # Sit still and pray.
         return -1
-
-
-    # def reverse_dict(self, mydict):
-    #     reversed_dict = {}
-    #     for key, value in mydict.items():
-    #         reversed_dict.setdefault(value, [])
-    #         reversed_dict[value].append(key)
-    #     return reversed_dict
-
-
