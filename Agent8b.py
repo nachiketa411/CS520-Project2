@@ -20,12 +20,15 @@ class Agent8b(Agent):
         count = 0
 
         while count <= NO_OF_STEPS_4:
+            if 1 in belief_mat_prey:
+                self.counter_for_prey_actually_found = self.counter_for_prey_actually_found + 1
 
             # Check if Agent knows where the predator is:
             if 1 in belief_mat_predator:
                 # Choose a node to survey for the prey
                 to_survey = self.select_node_prey(belief_mat_prey)
                 belief_mat_prey = self.update_belief_after_survey(belief_mat_prey, to_survey, self.prey.currPos)
+                self.counter_for_predator_actually_found = self.counter_for_predator_actually_found + 1
             else:
                 # Choose a node to survey to find the predator
                 to_survey = self.select_node_predator(belief_mat_predator, dist_dict)
@@ -52,7 +55,7 @@ class Agent8b(Agent):
                 if self.currPos == self.prey.currPos:
                     count += 1
                     print("Yippiieeee")
-                    return [count, 1]
+                    return [count, -1, self.counter_for_prey_actually_found, self.counter_for_predator_actually_found]
                 belief_mat_prey = self.update_belief_using_transition_mat(belief_mat_prey, transition_mat)
 
                 # Predator moves closer to Agent with a probability of 0.6
@@ -67,7 +70,7 @@ class Agent8b(Agent):
                                                                                          self.currPos)
                 if self.currPos == self.predator.currPos:
                     print("Ded")
-                    return [count, -1]
+                    return [count, -2, self.counter_for_prey_actually_found, self.counter_for_predator_actually_found]
 
                 count += 1
                 continue
@@ -79,13 +82,13 @@ class Agent8b(Agent):
             if self.currPos == self.prey.currPos:
                 print("Yippiieeee")
                 count += 1
-                return [count, 1]
+                return [count, -1, self.counter_for_prey_actually_found, self.counter_for_predator_actually_found]
 
             # Check if Predator is in current position
             if self.currPos == self.predator.currPos:
                 print("Ded")
                 count += 1
-                return [count, -1]
+                return [count, -2, self.counter_for_prey_actually_found, self.counter_for_predator_actually_found]
 
             belief_mat_prey = self.update_belief_after_agent_moves(belief_mat_prey, next_move, self.prey.currPos)
             belief_mat_predator = self.update_belief_after_agent_moves(belief_mat_predator, next_move, self.predator.currPos)
@@ -94,7 +97,7 @@ class Agent8b(Agent):
             if self.currPos == self.prey.currPos:
                 print("Yippiieeee")
                 count += 1
-                return [count, 1]
+                return [count, -1, self.counter_for_prey_actually_found, self.counter_for_predator_actually_found]
 
             # Predator moves closer to prey with a probability of 0.6
             decision = random.uniform(0, 1)
@@ -107,7 +110,7 @@ class Agent8b(Agent):
             if self.currPos == self.predator.currPos:
                 print("Ded")
                 count += 1
-                return [count, -1]
+                return [count, -2, self.counter_for_prey_actually_found, self.counter_for_predator_actually_found]
 
             belief_mat_prey = self.update_belief_using_transition_mat(belief_mat_prey, transition_mat)
             # belief_mat_predator = self.update_belief_using_distance_dic(belief_mat_predator, dist_dict)
@@ -115,7 +118,7 @@ class Agent8b(Agent):
                                                                                      self.currPos)
 
             count += 1
-        return [count, 0]
+        return [count, -3, self.counter_for_prey_actually_found, self.counter_for_predator_actually_found]
 
     def get_next_move(self, pred_pos, prey_pos, expected_distance_for_prey, expected_distance_for_predator):
         neighbours = self.graph[self.currPos]

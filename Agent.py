@@ -20,6 +20,8 @@ class Agent(ABC):
         self.prey = prey
         self.graph = graph_dict
         self.counter = 0
+        self.counter_for_prey_actually_found = 0
+        self.counter_for_predator_actually_found = 0
 
     def initialize(self, predator):
         self.predator = predator

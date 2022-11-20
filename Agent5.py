@@ -19,6 +19,8 @@ class Agent5(Agent):
         count = 0
 
         while count <= NO_OF_STEPS_4:
+            if 1 in belief_mat:
+                self.counter_for_predator_actually_found = self.counter_for_predator_actually_found + 1
 
             # Selecting a node to survey.
             to_survey = self.select_node(belief_mat, dist_dict)
@@ -38,7 +40,7 @@ class Agent5(Agent):
                 if self.currPos == self.prey.currPos:
                     count += 1
                     print("Yippiieeee")
-                    return [count, 1]
+                    return [count, -1, self.counter_for_prey_actually_found, self.counter_for_predator_actually_found]
                 # Predator moves closer to prey with a probability of 0.6
                 decision=random.uniform(0,1)
                 if decision < (1 - PROB_OF_DISTRACTED_PREDATOR):
@@ -46,11 +48,11 @@ class Agent5(Agent):
                 else:
                     self.predator.currPos=random.choice(self.graph[self.predator.currPos])
                     self.predator.path.append(self.predator.currPos)
-                belief_mat = self.update_belief_using_transition_mat(belief_mat, dist_dict)
-                # belief_mat = self.update_belief_after_distracted_predator_moves(belief_mat, self.currPos)
+                # belief_mat = self.update_belief_using_transition_mat(belief_mat, dist_dict)
+                belief_mat = self.update_belief_after_distracted_predator_moves(belief_mat, self.currPos)
                 if self.currPos == self.predator.currPos:
                     print("Ded")
-                    return [count, -1]
+                    return [count, -2, self.counter_for_prey_actually_found, self.counter_for_predator_actually_found]
 
                 count += 1
                 continue
@@ -62,13 +64,13 @@ class Agent5(Agent):
             if self.currPos == self.prey.currPos:
                 print("Yippiieeee")
                 count += 1
-                return [count, 1]
+                return [count, -1, self.counter_for_prey_actually_found, self.counter_for_predator_actually_found]
 
             # Check if Predator is in current position
             if self.currPos == self.predator.currPos:
                 print("Ded")
                 count += 1
-                return [count, -1]
+                return [count, -2, self.counter_for_prey_actually_found, self.counter_for_predator_actually_found]
 
             belief_mat = self.update_belief(belief_mat, next_move)
 
@@ -76,7 +78,7 @@ class Agent5(Agent):
             if self.currPos == self.prey.currPos:
                 print("Yippiieeee")
                 count += 1
-                return [count, 1]
+                return [count, -1, self.counter_for_prey_actually_found, self.counter_for_predator_actually_found]
 
             # Predator moves closer to prey with a probability of 0.6
             decision = random.uniform(0, 1)
@@ -89,13 +91,13 @@ class Agent5(Agent):
             if self.currPos == self.predator.currPos:
                 print("Ded")
                 count += 1
-                return [count, -1]
+                return [count, -2, self.counter_for_prey_actually_found, self.counter_for_predator_actually_found]
 
             belief_mat = self.update_belief_using_transition_mat(belief_mat, dist_dict)
             # belief_mat = self.update_belief_after_distracted_predator_moves(belief_mat, self.currPos)
 
             count += 1
-        return [count, 0]
+        return [count, -3, self.counter_for_prey_actually_found, self.counter_for_predator_actually_found]
 
     def get_next_move(self, pred_pos):
         neighbours = self.graph[self.currPos]

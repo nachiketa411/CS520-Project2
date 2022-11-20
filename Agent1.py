@@ -20,12 +20,12 @@ class Agent1(Agent):
                 if self.currPos == self.prey.currPos:
                     print("Yippiieeee")
                     count += 1
-                    return [count, 1]
+                    return [count, -1, self.counter_for_prey_actually_found, self.counter_for_predator_actually_found]
                 self.predator.take_next_move()
                 if self.currPos == self.predator.currPos:
                     print("Ded")
                     count += 1
-                    return [count, -1]
+                    return [count, -2, self.counter_for_prey_actually_found, self.counter_for_predator_actually_found]
                 count += 1
                 continue
             self.currPos = next_move
@@ -33,24 +33,24 @@ class Agent1(Agent):
             if self.currPos == self.prey.currPos:
                 print("Yippiieeee")
                 count += 1
-                return [count, 1]
+                return [count, -1, self.counter_for_prey_actually_found, self.counter_for_predator_actually_found]
             elif self.currPos == self.predator.currPos:
                 print("Ded")
                 count += 1
-                return [count, -1]
+                return [count, -2, self.counter_for_prey_actually_found, self.counter_for_predator_actually_found]
             # print("Inside Agent",self.graph)
             self.prey.take_next_move(copy.deepcopy(self.graph))
             if self.currPos == self.prey.currPos:
                 print("Yippiieeee")
                 count += 1
-                return [count, 1]
+                return [count, -1, self.counter_for_prey_actually_found, self.counter_for_predator_actually_found]
             self.predator.take_next_move()
             if self.currPos == self.predator.currPos:
                 print("Ded")
                 count += 1
-                return [count, -1]
+                return [count, -2, self.counter_for_prey_actually_found, self.counter_for_predator_actually_found]
             count += 1
-        return [count, 0]
+        return [count, -3, self.counter_for_prey_actually_found, self.counter_for_predator_actually_found]
 
     def get_next_move(self):
         neighbours = self.graph[self.currPos]

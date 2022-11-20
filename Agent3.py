@@ -16,6 +16,8 @@ class Agent3(Agent):
         count = 0
 
         while count <= NO_OF_STEPS_4:
+            if 1 in belief_mat:
+                self.counter_for_prey_actually_found = self.counter_for_prey_actually_found + 1
 
             # Selecting a node to survey.
             to_survey = self.select_node(belief_mat)
@@ -35,14 +37,14 @@ class Agent3(Agent):
                 if self.currPos == self.prey.currPos:
                     count += 1
                     print("Yippiieeee")
-                    return [count, 1]
+                    return [count, -1, self.counter_for_prey_actually_found, self.counter_for_predator_actually_found]
 
                 belief_mat = self.update_belief_using_transition_mat(belief_mat, trans_mat)
 
                 self.predator.take_next_move()
                 if self.currPos == self.predator.currPos:
                     print("Ded")
-                    return [count, -1]
+                    return [count, -2, self.counter_for_prey_actually_found, self.counter_for_predator_actually_found]
 
                 count += 1
                 continue
@@ -57,7 +59,7 @@ class Agent3(Agent):
             if belief_mat[next_move] == 1:
                 print("Yippiieeee")
                 count += 1
-                return [count, 1]
+                return [count, -1, self.counter_for_prey_actually_found, self.counter_for_predator_actually_found]
 
             self.prey.take_next_move(copy.deepcopy(self.graph))
             self.predator.take_next_move()
@@ -65,16 +67,16 @@ class Agent3(Agent):
             if self.currPos == self.prey.currPos:
                 print("Yippiieeee")
                 count += 1
-                return [count, 1]
+                return [count, -1, self.counter_for_prey_actually_found, self.counter_for_predator_actually_found]
             elif self.currPos == self.predator.currPos:
                 print("Ded")
                 count += 1
-                return [count, -1]
+                return [count, -2, self.counter_for_prey_actually_found, self.counter_for_predator_actually_found]
 
             belief_mat = self.update_belief_using_transition_mat(belief_mat, trans_mat)
 
             count += 1
-        return [count, 0]
+        return [count, -3, self.counter_for_prey_actually_found, self.counter_for_predator_actually_found]
 
     def get_next_move(self, to_survey_prey):
         neighbours = self.graph[self.currPos]

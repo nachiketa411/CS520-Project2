@@ -49,7 +49,7 @@ def simulate_agent(args):
     predator = Predator(graph_1)
 
     # change this with each agent
-    # agent1 = Agent1(prey, graph_1)
+    agent1 = Agent1(prey, graph_1)
     # agent1 = Agent2_1(prey, graph_1)
     # agent1 = Agent2_2(prey, graph_1)
     # agent1 = Agent3(prey, graph_1)
@@ -61,7 +61,7 @@ def simulate_agent(args):
     # agent1 = Agent7c(prey, graph_1)
     # agent1 = Agent8(prey, graph_1)
     # agent1 = Agent8b(prey, graph_1)
-    agent1 = Agent8c(prey, graph_1)
+    # agent1 = Agent8c(prey, graph_1)
     # agent1 = Agent9(prey, graph_1)
 
     agent1.initialize(predator)
@@ -69,7 +69,7 @@ def simulate_agent(args):
 
     # print('Agent location: ', agent1.currPos)
     # for Agents: 1
-    # steps_taken = agent1.move_agent()
+    steps_taken = agent1.move_agent()
 
     # for Agents: 2.1, 4.1
     # steps_taken = agent1.move_agent(transition_matrix, graph_distances)
@@ -81,7 +81,7 @@ def simulate_agent(args):
     # steps_taken = agent1.move_agent(graph_distances)
 
     # for Agent 7, 8 full
-    steps_taken = agent1.move_agent(graph_distances, transition_matrix)
+    # steps_taken = agent1.move_agent(graph_distances, transition_matrix)
 
     del graph_1
 
@@ -144,14 +144,49 @@ def main():
         stats = p.map(simulate_agent, all_possible_graph_combs)
 
     total_sum_of_steps = 0
+    total_no_of_times_prey_found_and_WON = 0
+    total_no_of_times_prey_found_and_LOST = 0
+    total_no_of_times_prey_found_and_HUNG = 0
+    total_no_of_times_predator_found_and_WON = 0
+    total_no_of_times_predator_found_and_LOST = 0
+    total_no_of_times_predator_found_and_HUNG = 0
+
     for i in range(len(stats)):
         total_sum_of_steps += stats[i][0]
+
+    for i in range(len(stats)):
+        if stats[i][1] == -1:
+            total_no_of_times_prey_found_and_WON += stats[i][2]
+            total_no_of_times_predator_found_and_WON += stats[i][3]
+
+        if stats[i][1] == -2:
+            total_no_of_times_prey_found_and_LOST += stats[i][2]
+            total_no_of_times_predator_found_and_LOST += stats[i][3]
+
+        if stats[i][1] == -3:
+            total_no_of_times_prey_found_and_HUNG += stats[i][2]
+            total_no_of_times_predator_found_and_HUNG += stats[i][3]
+
     avg_steps_taken = total_sum_of_steps / len(stats)
+    avg_times_prey_found_and_won = total_no_of_times_prey_found_and_WON / len(stats)
+    avg_times_prey_found_and_lost = total_no_of_times_prey_found_and_LOST / len(stats)
+    avg_times_prey_found_and_hung = total_no_of_times_prey_found_and_HUNG / len(stats)
+    avg_times_predator_found_and_won = total_no_of_times_predator_found_and_WON / len(stats)
+    avg_times_predator_found_and_lost = total_no_of_times_predator_found_and_LOST / len(stats)
+    avg_times_predator_found_and_hung = total_no_of_times_predator_found_and_HUNG / len(stats)
+
     print('Average Number of Steps taken: ', avg_steps_taken)
+
+    print('Average Number of Prey found and won: ', avg_times_prey_found_and_won)
+    print('Average Number of Prey found and lost: ', avg_times_prey_found_and_lost)
+    print('Average Number of Prey found and hung: ', avg_times_prey_found_and_hung)
+    print('Average Number of Predator found and won: ', avg_times_predator_found_and_won)
+    print('Average Number of Predator found and lost: ', avg_times_predator_found_and_lost)
+    print('Average Number of Predator found and hung: ', avg_times_predator_found_and_hung)
     stats = np.array(stats)
-    print("Final Success Rate: ", len(np.where(stats == 1)[0]))
-    print("Marr Gaya Mai: ", len(np.where(stats == -1)[0]))
-    print("Ghoom Gaya Mai: ", len(np.where(stats == 0)[0]))
+    print("Final Success Rate: ", len(np.where(stats == -1)[0]))
+    print("Marr Gaya Mai: ", len(np.where(stats == -2)[0]))
+    print("Ghoom Gaya Mai: ", len(np.where(stats == -3)[0]))
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
 
