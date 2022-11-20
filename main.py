@@ -7,7 +7,11 @@ from Agent2_2 import Agent2_2
 from Agent3 import Agent3
 from Agent4_1 import Agent4_1
 from Agent5 import Agent5
+from Agent6_1 import Agent6_1
 from Agent7 import Agent7
+from Agent7b import Agent7b
+from Agent7c import Agent7c
+from Agent9 import Agent9
 
 from Constants import ENVIRONMENT_PATH, GRAPH_DIST_PATH
 from Graph import Graph
@@ -72,7 +76,7 @@ if __name__ == '__main__':
 
     # ----------------------------------------------------
 
-    for k in range(100):
+    for k in range(1):
         # graph_1 = Graph()
         # visualize(graph_1)
 
@@ -105,7 +109,12 @@ if __name__ == '__main__':
             # agent1 = Agent3(prey, graph_1)
             # agent1 = Agent4_1(prey, graph_1)
             # agent1 = Agent5(prey, graph_1)
-            agent1 = Agent7(prey, graph_1)
+            # agent1 = Agent6_1(prey, graph_1)
+            # agent1 = Agent7(prey, graph_1)
+            # agent1 = Agent7b(prey, graph_1)
+            # agent1 = Agent7c(prey, graph_1)
+            agent1 = Agent9(prey, graph_1)
+
             agent1.initialize(predator)
             predator.initialize(agent1)
 
@@ -114,7 +123,7 @@ if __name__ == '__main__':
             # steps_taken = agent1.move_agent()
 
             # for Agents: 2.1, 4.1
-            #steps_taken = agent1.move_agent(transition_matrix, graph_distances)
+            # steps_taken = agent1.move_agent(transition_matrix, graph_distances)
 
             # for Agents: 2.2, 3
             # steps_taken = agent1.move_agent(transition_matrix)
@@ -122,9 +131,21 @@ if __name__ == '__main__':
             # for Agents: 5
             # steps_taken = agent1.move_agent(graph_distances)
 
-            # for Agents: 5
-            print("Main me: ",transition_matrix)
+            # for Agents: 6_1
+            # steps_taken = agent1.move_agent(graph_distances)
+
+            # for Agents: 7
             steps_taken = agent1.move_agent(graph_distances, transition_matrix)
+
+            # for Agents: 7b
+            # steps_taken = agent1.move_agent(graph_distances, transition_matrix)
+
+            # for Agents: 7c
+            # steps_taken = agent1.move_agent(graph_distances, transition_matrix)
+
+            # for Agents: 7c
+            steps_taken = agent1.move_agent(graph_distances, transition_matrix)
+
             if steps_taken[1] == 1:
                 successRate += 1
             if steps_taken[1] == 0:

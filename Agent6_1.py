@@ -70,7 +70,7 @@ class Agent6_1(Agent):
 
                 # belief_mat = self.update_belief_using_transition_mat(belief_mat, graph_distances)
                 belief_mat = self.update_belief_after_distracted_predator_moves(belief_mat, self.currPos)
-                print('Belief: ', belief_mat)
+                # print('Belief: ', belief_mat)
 
                 if self.currPos == self.predator.currPos:
                     print("Ded")
@@ -115,7 +115,7 @@ class Agent6_1(Agent):
 
             # belief_mat = self.update_belief_using_transition_mat(belief_mat, graph_distances)
             belief_mat = self.update_belief_after_distracted_predator_moves(belief_mat, self.currPos)
-            print('Belief: ', belief_mat)
+            # print('Belief: ', belief_mat)
             print("Belief Sum After Predator moved", sum(belief_mat))
 
             count += 1

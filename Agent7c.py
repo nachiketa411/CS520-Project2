@@ -30,7 +30,7 @@ class Agent7c(Agent):
             else:
                 # Choose a node to survey to find the predator
                 to_survey = self.select_node_predator(belief_mat_predator, dist_dict)
-                belief_mat_predator = self.update_belief_after_survey(belief_mat_predator, to_survey, self.prey.currPos)
+                belief_mat_predator = self.update_belief_after_survey(belief_mat_predator, to_survey, self.predator.currPos)
 
             print("After Survey:", sum(belief_mat_predator), sum(belief_mat_prey))
 
@@ -235,11 +235,12 @@ class Agent7c(Agent):
                 belief_mat = [0] * 50
                 belief_mat[node] = 1
                 return belief_mat
-        temp =  1 - belief_mat[node]
+        temp =  1 - (0.9*belief_mat[node])
+        x=belief_mat[node]
         belief_mat[node] = 0
         for i in range(len(belief_mat)):
-            belief_mat[i] = (belief_mat[i] / temp)*0.9
-        belief_mat[node] = 0.1
+            belief_mat[i] = belief_mat[i] / temp
+        belief_mat[node] = (x*0.1)/temp
         return belief_mat
 
     def update_belief_after_agent_moves(self, belief_mat, node, player):
