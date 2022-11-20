@@ -1,14 +1,12 @@
 import copy
 import random
 
-from Constants import NO_OF_STEPS_1, NO_OF_NODES
 from Agent import Agent
-from Predator import Predator
-from Prey import Prey
 from BiBFS import BidirectionalSearch
+from Constants import NO_OF_NODES, NO_OF_STEPS_4
 
 
-class Agent7(Agent):
+class Agent8(Agent):
 
     def move_agent(self, dist_dict, transition_mat):
         # Return 1 for Success, -1 when predator catches the Agent and 0 when counter exhausts
@@ -19,7 +17,7 @@ class Agent7(Agent):
 
         count = 0
 
-        while count <= NO_OF_STEPS_1:
+        while count <= NO_OF_STEPS_4:
 
             # print(count)
             # Check if Agent knows where the predator is:
@@ -38,7 +36,10 @@ class Agent7(Agent):
             predicted_pred_pos = self.select_node_predator(belief_mat_predator, dist_dict)
             predicted_prey_pos = self.select_node_prey(belief_mat_prey)
 
-            next_move = self.get_next_move(predicted_pred_pos, predicted_prey_pos)
+            expected_distance_for_prey = self.get_expected_distance_of_predator_from_agent(belief_mat_prey.copy(), self.currPos, dist_dict)
+            expected_distance_for_predator = self.get_expected_distance_of_predator_from_agent(belief_mat_predator.copy(), self.currPos, dist_dict)
+
+            next_move = self.get_next_move(predicted_pred_pos, predicted_prey_pos, expected_distance_for_prey, expected_distance_for_predator)
 
             # When Agent Chooses to stay in its position
             if next_move == -1:
@@ -111,14 +112,13 @@ class Agent7(Agent):
 
             belief_mat_prey = self.update_belief_using_transition_mat(belief_mat_prey, transition_mat)
             # belief_mat_predator = self.update_belief_using_distance_dic(belief_mat_predator, dist_dict)
-            belief_mat_predator = self.update_belief_after_distracted_predator_moves(belief_mat_predator,
-                                                                                     self.currPos)
+            belief_mat_predator = self.update_belief_after_distracted_predator_moves(belief_mat_predator, self.currPos)
             # print("After prey and predator moved", sum(belief_mat_predator), sum(belief_mat_prey))
 
             count += 1
         return [count, 0]
 
-    def get_next_move(self, pred_pos, prey_pos):
+    def get_next_move(self, pred_pos, prey_pos, expected_distance_for_prey, expected_distance_for_predator):
         neighbours = self.graph[self.currPos]
         # To find the distance between neighbours of Agent and Predator
         path_predator = self.find_path(neighbours, pred_pos)
@@ -138,7 +138,7 @@ class Agent7(Agent):
         best_neighbour = []
         # Neighbors that are closer to the Prey and farther from the Predator.
         for i in neighbours:
-            if len_agent_prey[i] < len(currpos_to_prey) and (len_agent_predator[i] > len(currpos_to_predator)):
+            if expected_distance_for_prey[i] < len(currpos_to_prey) and (expected_distance_for_predator[i] > len(currpos_to_predator)):
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -146,7 +146,7 @@ class Agent7(Agent):
 
         # Neighbors that are closer to the Prey and not closer to the Predator.
         for i in neighbours:
-            if len_agent_prey[i] < len(currpos_to_prey) and (len_agent_predator[i] == len(currpos_to_predator)):
+            if expected_distance_for_prey[i] < len(currpos_to_prey) and (expected_distance_for_predator[i] == len(currpos_to_predator)):
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -154,7 +154,7 @@ class Agent7(Agent):
 
         # Neighbors that are not farther from the Prey and farther from the Predator.
         for i in neighbours:
-            if len_agent_prey[i] == len(currpos_to_prey) and (len_agent_predator[i] > len(currpos_to_predator)):
+            if expected_distance_for_prey[i] == len(currpos_to_prey) and (expected_distance_for_predator[i] > len(currpos_to_predator)):
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -162,7 +162,7 @@ class Agent7(Agent):
 
         # Neighbors that are not farther from the Prey and not closer to the Predator.
         for i in neighbours:
-            if len_agent_prey[i] == len(currpos_to_prey) and (len_agent_predator[i] == len(currpos_to_predator)):
+            if expected_distance_for_prey[i] == len(currpos_to_prey) and (expected_distance_for_predator[i] == len(currpos_to_predator)):
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -170,7 +170,7 @@ class Agent7(Agent):
 
         # Neighbors that are farther from the Predator.
         for i in neighbours:
-            if len_agent_predator[i] > len(currpos_to_predator):
+            if expected_distance_for_predator[i] > len(currpos_to_predator):
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -178,7 +178,7 @@ class Agent7(Agent):
 
         # Neighbors that are not closer to the Predator.
         for i in neighbours:
-            if len_agent_predator[i] == len(currpos_to_predator):
+            if expected_distance_for_predator[i] == len(currpos_to_predator):
                 best_neighbour.append(i)
 
         if best_neighbour:
@@ -186,17 +186,6 @@ class Agent7(Agent):
 
         # Sit still and pray.
         return -1
-
-    def find_path(self, neighbours, pos_y):
-        path_dictionary = {}
-        for i in range(len(neighbours)):
-            temp = copy.deepcopy(self.graph)
-            bi_bfs = BidirectionalSearch(temp)
-            x = neighbours[i]
-            y = pos_y
-            path = bi_bfs.bidirectional_search(x, y)
-            path_dictionary[neighbours[i]] = path
-        return path_dictionary
 
     def select_node_predator(self, belief_mat, dist_dict):
         # Maximum probability of finding a predator
@@ -262,6 +251,9 @@ class Agent7(Agent):
             for j in range(len(transition_mat[i])):
                 summation += (belief_mat[j] * transition_mat[j][i])
             new_belief_mat[i] = summation
+        # print(transition_mat)
+        # print(belief_mat)
+        # print(new_belief_mat)
         return new_belief_mat
 
     def update_belief_using_distance_dic(self, belief_mat, dist_dict):
